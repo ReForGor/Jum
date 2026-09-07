@@ -1,0 +1,763 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Management Portal | TechPrice Thailand{% endblock %}
+
+{% block content %}
+<div id="admin-root" class="space-y-6">
+
+    <!-- ================= ADMIN LOGIN GATE (Shown if not logged in as Admin) ================= -->
+    <div id="admin-login-gate" class="hidden max-w-md mx-auto my-12 bg-[#0f172a] border border-cyan-500/40 rounded-2xl shadow-2xl p-8 text-center space-y-6">
+        <div class="w-16 h-16 rounded-2xl bg-cyan-950/80 border border-cyan-800/80 flex items-center justify-center text-cyan-400 text-3xl mx-auto shadow-lg shadow-cyan-900/30">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div>
+            <h2 class="text-2xl font-extrabold text-white">Admin Management Portal</h2>
+            <p class="text-xs text-gray-400 mt-1">Please authenticate with administrator credentials to manage products, scrapers, and store listings.</p>
+        </div>
+
+        <form id="admin-login-form" onsubmit="handleAdminLogin(event)" class="space-y-4 text-left text-xs">
+            <div>
+                <label class="block text-gray-300 font-semibold mb-1">Admin Email or Username:</label>
+                <input type="text" id="admin-login-id" required value="admin@techprice.com" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-cyan-500">
+            </div>
+            <div>
+                <label class="block text-gray-300 font-semibold mb-1">Password:</label>
+                <input type="password" id="admin-login-pass" required value="admin123" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-cyan-500">
+            </div>
+            <div class="p-3 rounded-xl bg-cyan-950/50 border border-cyan-800/50 text-[11px] text-cyan-300">
+                🛡️ <strong>Default Admin Credentials:</strong><br>
+                Email: <code>admin@techprice.com</code> | Password: <code>admin123</code>
+            </div>
+            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs shadow-lg transition-all">
+                Authenticate as Admin
+            </button>
+        </form>
+    </div>
+
+    <!-- ================= ADMIN DASHBOARD INTERFACE (Shown when Authenticated) ================= -->
+    <div id="admin-dashboard" class="hidden space-y-8">
+        
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-800 pb-6">
+            <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800 text-xs font-bold mb-2">
+                    <i class="fa-solid fa-shield-halved text-cyan-400"></i>
+                    Admin Control Center • JIB • iHaveCPU • BaNANA • Advice
+                </div>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-white">TechPrice Backend Management</h1>
+                <p class="text-sm text-gray-400 mt-1">Manage IT equipment catalog, store price listings, scraper pipelines, and user alerts.</p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="openBroadcastModal()" class="px-3.5 py-2 rounded-xl bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-800 text-xs font-bold transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-bullhorn text-purple-400"></i> Broadcast Alert
+                </button>
+                <button onclick="openAddProductModal()" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shadow-lg transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Add New Hardware
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex items-center gap-2 border-b border-gray-800 overflow-x-auto pb-2 scrollbar-thin text-xs font-bold">
+            <button onclick="switchAdminTab('overview')" class="admin-tab active px-4 py-2.5 rounded-xl bg-cyan-600 text-white flex items-center gap-2 transition-all whitespace-nowrap" data-tab="overview">
+                <i class="fa-solid fa-chart-pie"></i> Overview & KPI
+            </button>
+            <button onclick="switchAdminTab('products')" class="admin-tab px-4 py-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white border border-gray-800 flex items-center gap-2 transition-all whitespace-nowrap" data-tab="products">
+                <i class="fa-solid fa-microchip"></i> Hardware Catalog
+            </button>
+            <button onclick="switchAdminTab('listings')" class="admin-tab px-4 py-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white border border-gray-800 flex items-center gap-2 transition-all whitespace-nowrap" data-tab="listings">
+                <i class="fa-solid fa-store"></i> Store Prices & Overrides
+            </button>
+            <button onclick="switchAdminTab('users')" class="admin-tab px-4 py-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white border border-gray-800 flex items-center gap-2 transition-all whitespace-nowrap" data-tab="users">
+                <i class="fa-solid fa-users"></i> Users & Watchlists
+            </button>
+        </div>
+
+        <!-- ================= TAB 1: OVERVIEW ================= -->
+        <div id="tab-content-overview" class="admin-tab-pane space-y-6">
+            <!-- Metric KPI Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div class="p-4 rounded-xl bg-[#111827] border border-gray-800">
+                    <span class="text-[10px] text-gray-500 uppercase font-bold block mb-1">Hardware Tracked</span>
+                    <span class="text-2xl font-extrabold text-white" id="kpi-products">0</span>
+                </div>
+                <div class="p-4 rounded-xl bg-[#111827] border border-gray-800">
+                    <span class="text-[10px] text-gray-500 uppercase font-bold block mb-1">Price Listings</span>
+                    <span class="text-2xl font-extrabold text-emerald-400" id="kpi-listings">0</span>
+                </div>
+                <div class="p-4 rounded-xl bg-[#111827] border border-gray-800">
+                    <span class="text-[10px] text-gray-500 uppercase font-bold block mb-1">Thai Stores</span>
+                    <span class="text-2xl font-extrabold text-cyan-400" id="kpi-stores">4</span>
+                </div>
+                <div class="p-4 rounded-xl bg-[#111827] border border-gray-800">
+                    <span class="text-[10px] text-gray-500 uppercase font-bold block mb-1">Registered Users</span>
+                    <span class="text-2xl font-extrabold text-blue-400" id="kpi-users">0</span>
+                </div>
+                <div class="p-4 rounded-xl bg-[#111827] border border-gray-800">
+                    <span class="text-[10px] text-gray-500 uppercase font-bold block mb-1">Active Alerts</span>
+                    <span class="text-2xl font-extrabold text-amber-400" id="kpi-alerts">0</span>
+                </div>
+                <div class="p-4 rounded-xl bg-[#111827] border border-gray-800">
+                    <span class="text-[10px] text-gray-500 uppercase font-bold block mb-1">Notifications Sent</span>
+                    <span class="text-2xl font-extrabold text-purple-400" id="kpi-notifications">0</span>
+                </div>
+            </div>
+
+            <!-- Stores Status & Recent Alerts Log -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Thai Stores Card -->
+                <div class="p-5 rounded-2xl bg-[#0f172a] border border-gray-800 space-y-4">
+                    <h3 class="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-server text-cyan-400"></i> Thai Platform Status
+                    </h3>
+                    <div id="admin-stores-list" class="space-y-2 text-xs">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Recent Notifications Card -->
+                <div class="p-5 rounded-2xl bg-[#0f172a] border border-gray-800 space-y-4">
+                    <h3 class="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-bell text-amber-400"></i> Recent Price Drop Dispatches
+                    </h3>
+                    <div id="admin-recent-notifs" class="space-y-2 text-xs divide-y divide-gray-800/60 max-h-60 overflow-y-auto">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 2: PRODUCTS MANAGER ================= -->
+        <div id="tab-content-products" class="admin-tab-pane hidden space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-gray-900 border border-gray-800">
+                <input type="text" id="admin-prod-search" placeholder="Search hardware by name or brand..." oninput="loadAdminProducts()" class="w-72 bg-gray-950 border border-gray-700 text-xs rounded-lg px-3 py-2 text-white">
+                <span class="text-xs text-gray-400" id="admin-prod-count">Loading items...</span>
+            </div>
+
+            <div class="overflow-x-auto rounded-2xl border border-gray-800 bg-[#0f172a]">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-gray-900/90 text-gray-400 uppercase text-[10px] font-bold border-b border-gray-800">
+                        <tr>
+                            <th class="py-3 px-4">Hardware Item</th>
+                            <th class="py-3 px-4">Category</th>
+                            <th class="py-3 px-4">Brand</th>
+                            <th class="py-3 px-4">Official MSRP</th>
+                            <th class="py-3 px-4">Lowest Price</th>
+                            <th class="py-3 px-4">Thai Stores</th>
+                            <th class="py-3 px-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-products-tbody" class="divide-y divide-gray-800/70">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ================= TAB 3: STORE LISTINGS & OVERRIDES ================= -->
+        <div id="tab-content-listings" class="admin-tab-pane hidden space-y-4">
+            <div class="p-4 rounded-xl bg-cyan-950/30 border border-cyan-800/40 text-xs text-cyan-300">
+                💡 <strong>Store Price Overrides:</strong> You can manually adjust prices or stock statuses on specific Thai platforms (JIB, iHaveCPU, BaNANA, Advice) to test price drop alert triggers!
+            </div>
+
+            <div class="overflow-x-auto rounded-2xl border border-gray-800 bg-[#0f172a]">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-gray-900/90 text-gray-400 uppercase text-[10px] font-bold border-b border-gray-800">
+                        <tr>
+                            <th class="py-3 px-4">Product Name</th>
+                            <th class="py-3 px-4">Platform Store</th>
+                            <th class="py-3 px-4">Current Price (฿)</th>
+                            <th class="py-3 px-4">Stock Status</th>
+                            <th class="py-3 px-4">Store Link</th>
+                            <th class="py-3 px-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-listings-tbody" class="divide-y divide-gray-800/70">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ================= TAB 4: USERS & WATCHLISTS ================= -->
+        <div id="tab-content-users" class="admin-tab-pane hidden space-y-6">
+            <div class="rounded-2xl border border-gray-800 bg-[#0f172a] p-5 space-y-4">
+                <h3 class="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-users text-cyan-400"></i> Registered User Accounts
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-gray-900/90 text-gray-400 uppercase text-[10px] font-bold border-b border-gray-800">
+                            <tr>
+                                <th class="py-3 px-4">ID</th>
+                                <th class="py-3 px-4">Username</th>
+                                <th class="py-3 px-4">Email</th>
+                                <th class="py-3 px-4">Role</th>
+                                <th class="py-3 px-4">Alerts Tracked</th>
+                                <th class="py-3 px-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-tbody" class="divide-y divide-gray-800/70">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- All Price Drop Alerts -->
+            <div class="rounded-2xl border border-gray-800 bg-[#0f172a] p-5 space-y-4">
+                <h3 class="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-bell text-amber-400"></i> All User Price Drop Watchlist Subscriptions
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-gray-900/90 text-gray-400 uppercase text-[10px] font-bold border-b border-gray-800">
+                            <tr>
+                                <th class="py-3 px-4">User</th>
+                                <th class="py-3 px-4">Hardware Item</th>
+                                <th class="py-3 px-4">Target Price (฿)</th>
+                                <th class="py-3 px-4">Current Price</th>
+                                <th class="py-3 px-4">Triggered Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-alerts-tbody" class="divide-y divide-gray-800/70">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ================= MODAL: ADD / EDIT PRODUCT ================= -->
+<div id="product-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-lg bg-[#0f172a] border border-gray-800 rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+            <h3 class="text-base font-bold text-white" id="product-modal-title">Add New Hardware Component</h3>
+            <button onclick="closeProductModal()" class="text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <form id="product-form" onsubmit="handleProductFormSubmit(event)" class="space-y-3 text-xs">
+            <input type="hidden" id="edit-prod-id">
+            <div>
+                <label class="block text-gray-300 font-semibold mb-1">Product Full Name:</label>
+                <input type="text" id="prod-name" required placeholder="e.g. NVIDIA GeForce RTX 5080 16GB GDDR7" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-gray-300 font-semibold mb-1">Category:</label>
+                    <select id="prod-category" required class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white">
+                        {% for cat in categories %}
+                        <option value="{{ cat }}">{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-300 font-semibold mb-1">Brand:</label>
+                    <input type="text" id="prod-brand" required placeholder="e.g. NVIDIA, AMD, Intel" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-gray-300 font-semibold mb-1">Model Number:</label>
+                    <input type="text" id="prod-model" placeholder="e.g. RTX-5080-FE" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white">
+                </div>
+                <div>
+                    <label class="block text-gray-300 font-semibold mb-1">Official MSRP (฿ THB):</label>
+                    <input type="number" step="10" id="prod-msrp" required placeholder="e.g. 39900" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white font-bold">
+                </div>
+            </div>
+            <div>
+                <label class="block text-gray-300 font-semibold mb-1">Image URL:</label>
+                <input type="url" id="prod-image" placeholder="https://images.unsplash.com/photo-..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white">
+            </div>
+            <div>
+                <label class="block text-gray-300 font-semibold mb-1">Description:</label>
+                <textarea id="prod-desc" rows="2" placeholder="Hardware overview and key capabilities..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white"></textarea>
+            </div>
+            <div class="pt-3 border-t border-gray-800 flex justify-end gap-2">
+                <button type="button" onclick="closeProductModal()" class="px-4 py-2 rounded-lg bg-gray-800 text-gray-300">Cancel</button>
+                <button type="submit" class="px-4 py-2 rounded-lg bg-cyan-600 text-white font-bold">Save Hardware</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ================= MODAL: EDIT STORE LISTING ================= -->
+<div id="listing-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-[#0f172a] border border-gray-800 rounded-2xl p-6 shadow-2xl space-y-4">
+        <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+            <h3 class="text-base font-bold text-white">Override Store Price</h3>
+            <button onclick="closeListingModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <form id="listing-form" onsubmit="handleListingFormSubmit(event)" class="space-y-3 text-xs">
+            <input type="hidden" id="edit-listing-id">
+            <div>
+                <label class="block text-gray-300 font-semibold mb-1">New Store Price (฿ THB):</label>
+                <input type="number" step="10" id="listing-price" required class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white font-bold">
+            </div>
+            <div>
+                <label class="block text-gray-300 font-semibold mb-1">Stock Status:</label>
+                <select id="listing-stock" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white">
+                    <option value="in_stock">In Stock</option>
+                    <option value="low_stock">Low Stock</option>
+                    <option value="backorder">Backorder</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-gray-300 font-semibold mb-1">Store Product URL:</label>
+                <input type="url" id="listing-url" required class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white">
+            </div>
+            <div class="pt-3 border-t border-gray-800 flex justify-end gap-2">
+                <button type="button" onclick="closeListingModal()" class="px-4 py-2 rounded-lg bg-gray-800 text-gray-300">Cancel</button>
+                <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 text-white font-bold">Update Price</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ================= MODAL: BROADCAST ALERT ================= -->
+<div id="broadcast-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-[#0f172a] border border-gray-800 rounded-2xl p-6 shadow-2xl space-y-4">
+        <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-bullhorn text-purple-400"></i> Broadcast Price Drop Notification
+            </h3>
+            <button onclick="closeBroadcastModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <form id="broadcast-form" onsubmit="handleBroadcastSubmit(event)" class="space-y-3 text-xs">
+            <div>
+                <label class="block text-gray-300 font-semibold mb-1">Notification Title:</label>
+                <input type="text" id="broadcast-title" required value="🔥 Flash Deal Alert: RTX 5080 Dropped to ฿37,900!" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white">
+            </div>
+            <div>
+                <label class="block text-gray-300 font-semibold mb-1">Store Name:</label>
+                <input type="text" id="broadcast-store" required value="iHaveCPU / Advice" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white">
+            </div>
+            <div>
+                <label class="block text-gray-300 font-semibold mb-1">Alert Message:</label>
+                <textarea id="broadcast-message" rows="3" required class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white">Special discount currently available! Claim your unit before stocks run out.</textarea>
+            </div>
+            <div class="pt-3 border-t border-gray-800 flex justify-end gap-2">
+                <button type="button" onclick="closeBroadcastModal()" class="px-4 py-2 rounded-lg bg-gray-800 text-gray-300">Cancel</button>
+                <button type="submit" class="px-4 py-2 rounded-lg bg-purple-600 text-white font-bold">Dispatch to All Users</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let adminProductsCache = [];
+
+async function initAdminPortal() {
+    try {
+        const res = await fetch('/api/auth/me');
+        if (res.ok) {
+            const user = await res.json();
+            if (user.is_admin) {
+                document.getElementById('admin-login-gate')?.classList.add('hidden');
+                document.getElementById('admin-dashboard')?.classList.remove('hidden');
+                loadAdminOverview();
+                return;
+            }
+        }
+        // If not authenticated as admin, display login gate
+        document.getElementById('admin-login-gate')?.classList.remove('hidden');
+        document.getElementById('admin-dashboard')?.classList.add('hidden');
+    } catch(err) {
+        document.getElementById('admin-login-gate')?.classList.remove('hidden');
+    }
+}
+
+async function handleAdminLogin(e) {
+    e.preventDefault();
+    const loginId = document.getElementById('admin-login-id').value;
+    const password = document.getElementById('admin-login-pass').value;
+
+    try {
+        const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ email_or_username: loginId, password: password })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.user.is_admin) {
+            showToast('Authenticated as Administrator!', 'success');
+            initAdminPortal();
+            checkAuthState();
+        } else if (res.ok && !data.user.is_admin) {
+            showToast('Access denied: Account is not an administrator.', 'error');
+        } else {
+            showToast(data.detail || 'Authentication failed', 'error');
+        }
+    } catch(err) {
+        showToast('Login request error', 'error');
+    }
+}
+
+function switchAdminTab(tab) {
+    document.querySelectorAll('.admin-tab').forEach(btn => {
+        if(btn.getAttribute('data-tab') === tab) {
+            btn.classList.add('active', 'bg-cyan-600', 'text-white');
+            btn.classList.remove('bg-gray-900', 'text-gray-300');
+        } else {
+            btn.classList.remove('active', 'bg-cyan-600', 'text-white');
+            btn.classList.add('bg-gray-900', 'text-gray-300');
+        }
+    });
+
+    document.querySelectorAll('.admin-tab-pane').forEach(p => p.classList.add('hidden'));
+    document.getElementById(`tab-content-${tab}`)?.classList.remove('hidden');
+
+    if (tab === 'overview') loadAdminOverview();
+    if (tab === 'products') loadAdminProducts();
+    if (tab === 'listings') loadAdminListings();
+    if (tab === 'users') loadAdminUsers();
+}
+
+async function loadAdminOverview() {
+    try {
+        const res = await fetch('/api/admin/stats');
+        const stats = await res.json();
+
+        document.getElementById('kpi-products').textContent = stats.products_count;
+        document.getElementById('kpi-listings').textContent = stats.listings_count;
+        document.getElementById('kpi-stores').textContent = stats.stores_count;
+        document.getElementById('kpi-users').textContent = stats.users_count;
+        document.getElementById('kpi-alerts').textContent = stats.alerts_count;
+        document.getElementById('kpi-notifications').textContent = stats.notifications_count;
+
+        // Render Stores
+        const storesList = document.getElementById('admin-stores-list');
+        storesList.innerHTML = (stats.stores || []).map(s => `
+            <div class="p-3 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-3 h-3 rounded-full" style="background-color: ${s.color}"></div>
+                    <span class="font-bold text-white">${s.name}</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-gray-400 font-mono">${s.listings_count} items</span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-950 text-emerald-400 border border-emerald-800">Operational</span>
+                </div>
+            </div>
+        `).join('');
+
+        // Render Recent notifications
+        const notifsList = document.getElementById('admin-recent-notifs');
+        notifsList.innerHTML = (stats.recent_notifications || []).map(n => `
+            <div class="p-2.5 flex items-center justify-between gap-2">
+                <div>
+                    <div class="font-bold text-white">${n.title}</div>
+                    <div class="text-[10px] text-gray-400">${n.store_name} • ฿${n.new_price.toLocaleString('th-TH')}</div>
+                </div>
+                <span class="text-[10px] text-emerald-400 font-semibold">Dispatched</span>
+            </div>
+        `).join('');
+
+    } catch(err) {
+        console.error(err);
+    }
+}
+
+async function loadAdminProducts() {
+    const q = document.getElementById('admin-prod-search')?.value || '';
+    const tbody = document.getElementById('admin-products-tbody');
+    const countLabel = document.getElementById('admin-prod-count');
+
+    try {
+        const res = await fetch(`/api/admin/products${q ? `?q=${encodeURIComponent(q)}` : ''}`);
+        const prods = await res.json();
+        adminProductsCache = prods;
+        countLabel.textContent = `${prods.length} components`;
+
+        tbody.innerHTML = prods.map(p => `
+            <tr class="hover:bg-gray-800/40 transition-colors">
+                <td class="py-3 px-4">
+                    <div class="flex items-center gap-3">
+                        <img src="${p.image_url}" class="w-9 h-9 rounded-lg object-cover bg-gray-900 border border-gray-700">
+                        <div>
+                            <div class="font-bold text-white">${p.name}</div>
+                            <div class="text-[10px] font-mono text-gray-500">${p.model_no || p.slug}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="py-3 px-4 text-cyan-400 font-medium">${p.category}</td>
+                <td class="py-3 px-4 font-bold text-gray-300">${p.brand}</td>
+                <td class="py-3 px-4 font-mono">฿${p.msrp.toLocaleString('th-TH')}</td>
+                <td class="py-3 px-4 font-mono font-bold text-emerald-400">฿${p.lowest_price.toLocaleString('th-TH')}</td>
+                <td class="py-3 px-4">${p.store_count} stores</td>
+                <td class="py-3 px-4 text-right">
+                    <div class="flex items-center justify-end gap-1.5">
+                        <button onclick="editProduct(${p.id})" class="p-1.5 rounded-lg bg-gray-800 hover:bg-cyan-600 text-gray-300 hover:text-white transition-colors" title="Edit Specs">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button onclick="deleteProduct(${p.id})" class="p-1.5 rounded-lg bg-gray-800 hover:bg-red-600 text-gray-300 hover:text-white transition-colors" title="Delete Hardware">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+
+    } catch(err) {
+        console.error(err);
+    }
+}
+
+async function loadAdminListings() {
+    const tbody = document.getElementById('admin-listings-tbody');
+    try {
+        const res = await fetch('/api/admin/products');
+        const prods = await res.json();
+
+        let rows = [];
+        prods.forEach(p => {
+            (p.listings || []).forEach(l => {
+                rows.push(`
+                <tr class="hover:bg-gray-800/40 transition-colors">
+                    <td class="py-3 px-4 font-bold text-white">${p.name}</td>
+                    <td class="py-3 px-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2.5 h-2.5 rounded-full" style="background-color: ${l.store_color}"></div>
+                            <span class="font-semibold text-gray-200">${l.store_name}</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4 font-mono font-bold text-emerald-400">฿${l.price.toLocaleString('th-TH')}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-gray-800 border border-gray-700">
+                            ${l.stock_status.replace('_', ' ')}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4">
+                        <a href="${l.product_url}" target="_blank" class="text-cyan-400 hover:underline flex items-center gap-1">
+                            Link <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                        </a>
+                    </td>
+                    <td class="py-3 px-4 text-right">
+                        <button onclick="openListingModal(${l.id}, ${l.price}, '${l.stock_status}', '${l.product_url}')" class="px-2.5 py-1 rounded bg-gray-800 hover:bg-emerald-600 text-white font-semibold transition-colors">
+                            Override Price
+                        </button>
+                    </td>
+                </tr>
+                `);
+            });
+        });
+
+        tbody.innerHTML = rows.join('');
+    } catch(err) {
+        console.error(err);
+    }
+}
+
+async function loadAdminUsers() {
+    try {
+        const ures = await fetch('/api/admin/users');
+        const users = await ures.json();
+        document.getElementById('admin-users-tbody').innerHTML = users.map(u => `
+            <tr class="hover:bg-gray-800/40 transition-colors">
+                <td class="py-3 px-4 font-mono text-gray-500">#${u.id}</td>
+                <td class="py-3 px-4 font-bold text-white">${u.username}</td>
+                <td class="py-3 px-4 text-gray-400">${u.email}</td>
+                <td class="py-3 px-4">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${u.is_admin ? 'bg-purple-950 text-purple-300 border border-purple-800' : 'bg-gray-800 text-gray-400'}">
+                        ${u.is_admin ? 'Administrator' : 'Standard User'}
+                    </span>
+                </td>
+                <td class="py-3 px-4 font-bold text-cyan-400">${u.alerts_count} alerts</td>
+                <td class="py-3 px-4 text-right">
+                    <button onclick="toggleUserAdmin(${u.id})" class="px-2.5 py-1 rounded bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition-colors">
+                        ${u.is_admin ? 'Demote' : 'Promote to Admin'}
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+
+        const ares = await fetch('/api/admin/alerts');
+        const alerts = await ares.json();
+        document.getElementById('admin-alerts-tbody').innerHTML = alerts.map(a => `
+            <tr class="hover:bg-gray-800/40 transition-colors">
+                <td class="py-3 px-4 font-semibold text-white">${a.username} (${a.email})</td>
+                <td class="py-3 px-4 text-cyan-400 font-bold">${a.product_name}</td>
+                <td class="py-3 px-4 font-mono text-amber-400 font-bold">฿${a.target_price.toLocaleString('th-TH')}</td>
+                <td class="py-3 px-4 font-mono">฿${(a.current_lowest_price || 0).toLocaleString('th-TH')}</td>
+                <td class="py-3 px-4">
+                    ${a.triggered_at ? '<span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-bold">🔥 Triggered</span>' : '<span class="text-gray-500">Monitoring</span>'}
+                </td>
+            </tr>
+        `).join('');
+
+    } catch(err) {
+        console.error(err);
+    }
+}
+
+// ----------------- CRUD Actions -----------------
+
+function openAddProductModal() {
+    document.getElementById('edit-prod-id').value = '';
+    document.getElementById('product-form').reset();
+    document.getElementById('product-modal-title').textContent = 'Add New Hardware Component';
+    document.getElementById('product-modal').classList.remove('hidden');
+}
+
+function closeProductModal() {
+    document.getElementById('product-modal').classList.add('hidden');
+}
+
+function editProduct(id) {
+    const prod = adminProductsCache.find(p => p.id === id);
+    if (!prod) return;
+
+    document.getElementById('edit-prod-id').value = prod.id;
+    document.getElementById('prod-name').value = prod.name;
+    document.getElementById('prod-category').value = prod.category;
+    document.getElementById('prod-brand').value = prod.brand;
+    document.getElementById('prod-model').value = prod.model_no || '';
+    document.getElementById('prod-msrp').value = prod.msrp;
+    document.getElementById('prod-image').value = prod.image_url || '';
+    document.getElementById('prod-desc').value = prod.description || '';
+
+    document.getElementById('product-modal-title').textContent = `Edit Hardware (${prod.name})`;
+    document.getElementById('product-modal').classList.remove('hidden');
+}
+
+async function handleProductFormSubmit(e) {
+    e.preventDefault();
+    const editId = document.getElementById('edit-prod-id').value;
+    const payload = {
+        name: document.getElementById('prod-name').value,
+        category: document.getElementById('prod-category').value,
+        brand: document.getElementById('prod-brand').value,
+        model_no: document.getElementById('prod-model').value,
+        msrp: parseFloat(document.getElementById('prod-msrp').value),
+        image_url: document.getElementById('prod-image').value,
+        description: document.getElementById('prod-desc').value
+    };
+
+    const url = editId ? `/api/admin/products/${editId}` : '/api/admin/products';
+    const method = editId ? 'PUT' : 'POST';
+
+    try {
+        const res = await fetch(url, {
+            method: method,
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            showToast(editId ? 'Product updated!' : 'Hardware item added to catalog!', 'success');
+            closeProductModal();
+            loadAdminProducts();
+        } else {
+            showToast('Failed to save product.', 'error');
+        }
+    } catch(err) {
+        showToast(err.message, 'error');
+    }
+}
+
+async function deleteProduct(id) {
+    if(!confirm('Are you sure you want to delete this hardware product?')) return;
+    try {
+        const res = await fetch(`/api/admin/products/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+            showToast('Product deleted from database.', 'info');
+            loadAdminProducts();
+        }
+    } catch(err) {
+        showToast('Delete error', 'error');
+    }
+}
+
+function openListingModal(id, price, stock, url) {
+    document.getElementById('edit-listing-id').value = id;
+    document.getElementById('listing-price').value = price;
+    document.getElementById('listing-stock').value = stock;
+    document.getElementById('listing-url').value = url;
+    document.getElementById('listing-modal').classList.remove('hidden');
+}
+
+function closeListingModal() {
+    document.getElementById('listing-modal').classList.add('hidden');
+}
+
+async function handleListingFormSubmit(e) {
+    e.preventDefault();
+    const listingId = document.getElementById('edit-listing-id').value;
+    const payload = {
+        price: parseFloat(document.getElementById('listing-price').value),
+        stock_status: document.getElementById('listing-stock').value,
+        product_url: document.getElementById('listing-url').value
+    };
+
+    try {
+        const res = await fetch(`/api/admin/listings/${listingId}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            showToast('Store price overridden successfully!', 'success');
+            closeListingModal();
+            loadAdminListings();
+        }
+    } catch(err) {
+        showToast('Update error', 'error');
+    }
+}
+
+async function toggleUserAdmin(userId) {
+    try {
+        const res = await fetch(`/api/admin/users/${userId}/toggle-admin`, { method: 'PATCH' });
+        if (res.ok) {
+            showToast('User role updated!', 'success');
+            loadAdminUsers();
+        }
+    } catch(err) {
+        showToast('Role update failed', 'error');
+    }
+}
+
+function openBroadcastModal() {
+    document.getElementById('broadcast-modal').classList.remove('hidden');
+}
+
+function closeBroadcastModal() {
+    document.getElementById('broadcast-modal').classList.add('hidden');
+}
+
+async function handleBroadcastSubmit(e) {
+    e.preventDefault();
+    const payload = {
+        title: document.getElementById('broadcast-title').value,
+        store_name: document.getElementById('broadcast-store').value,
+        message: document.getElementById('broadcast-message').value
+    };
+
+    try {
+        const res = await fetch('/api/admin/broadcast-notification', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (res.ok) {
+            showToast(data.message, 'success');
+            closeBroadcastModal();
+            checkNotificationsCount();
+        }
+    } catch(err) {
+        showToast('Broadcast failed', 'error');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initAdminPortal);
+</script>
+{% endblock %}

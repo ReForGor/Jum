@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Today's Best IT Equipment Deals & Price Drops | TechPrice{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="rounded-2xl bg-gradient-to-r from-amber-950/40 via-red-950/30 to-purple-950/40 border border-amber-800/40 p-6 md:p-8">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold mb-3">
+            <i class="fa-solid fa-fire text-amber-400"></i> Top Price Drops & Flash Sales
+        </div>
+        <h1 class="text-2xl md:text-4xl font-extrabold text-white">Live IT Hardware Deals Tracker</h1>
+        <p class="text-sm md:text-base text-gray-300 mt-2 max-w-2xl">
+            Real-time algorithmically detected hardware discounts and price cuts across Amazon, Newegg, Micro Center, and Best Buy.
+        </p>
+    </div>
+
+    <!-- Filter & Sort Bar -->
+    <div class="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-gray-900/60 border border-gray-800">
+        <div class="flex items-center gap-3">
+            <span class="text-xs text-gray-400 font-medium">Minimum Discount:</span>
+            <button onclick="filterDeals(5)" class="deal-filter-btn active px-3 py-1 rounded-lg text-xs font-semibold bg-amber-600 text-white" data-pct="5">All Deals (>5%)</button>
+            <button onclick="filterDeals(10)" class="deal-filter-btn px-3 py-1 rounded-lg text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-300" data-pct="10">>10% OFF</button>
+            <button onclick="filterDeals(15)" class="deal-filter-btn px-3 py-1 rounded-lg text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-300" data-pct="15">>15% OFF</button>
+        </div>
+        <div class="text-xs text-gray-400">
+            Auto-refreshed with scraper engine
+        </div>
+    </div>
+
+    <!-- Deals Grid -->
+    <div id="deals-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Dynamically rendered -->
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let currentMinDiscount = 5;
+
+async function loadDeals() {
+    const grid = document.getElementById('deals-grid');
+    grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-2xl mb-2"></i><br>Finding best hardware deals...</div>';
+    
+    try {
+        const res = await fetch('/api/products?sort_by=discount&limit=50');
+        const prods = await res.json();
+        
+        const filtered = prods.filter(p => p.max_discount_percent >= currentMinDiscount);
+        
+        if (filtered.length === 0) {
+            grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">No deals found matching the current discount threshold.</div>';
+            return;
+        }
+
+        grid.innerHTML = filtered.map(p => {
+            const savings = p.msrp && p.lowest_price ? (p.msrp - p.lowest_price).toFixed(2) : '0.00';
+            return `
+            <div class="bg-[#111827] border border-gray-800 hover:border-amber-500/50 rounded-2xl p-5 flex flex-col justify-between shadow-xl transition-all group">
+                <div>
+                    <div class="relative mb-4 overflow-hidden rounded-xl bg-gray-900 h-44 flex items-center justify-center">
+                        <img src="${p.image_url || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=400'}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <div class="absolute top-2 right-2 bg-gradient-to-r from-red-600 to-amber-600 text-white font-extrabold text-xs px-2.5 py-1 rounded-lg shadow-lg flex items-center gap-1">
+                            <i class="fa-solid fa-fire text-amber-300"></i> ${p.max_discount_percent}% OFF
+                        </div>
+                        <div class="absolute bottom-2 left-2 bg-black/70 backdrop-blur-md px-2 py-0.5 rounded text-[10px] text-gray-300 font-medium">
+                            ${p.category}
+                        </div>
+                    </div>
+                    
+                    <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">${p.brand}</div>
+                    <h3 class="text-sm font-bold text-white mb-2 line-clamp-2">${p.name}</h3>
+                    
+                    <div class="flex items-baseline gap-2 mb-1">
+                        <span class="text-xl font-extrabold text-emerald-400">$${(p.lowest_price || p.msrp).toFixed(2)}</span>
+                        ${p.msrp ? `<span class="text-xs text-gray-500 line-through">$${p.msrp.toFixed(2)}</span>` : ''}
+                    </div>
+                    <div class="text-xs text-emerald-400/90 font-medium mb-3">
+                        Save $${savings} on ${p.best_store_name || 'store'}
+                    </div>
+                </div>
+
+                <div class="pt-3 border-t border-gray-800 flex items-center gap-2">
+                    <button onclick="openProductModal(${p.id})" class="flex-1 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-white font-semibold text-xs transition-colors text-center">
+                        Compare Platforms
+                    </button>
+                    ${p.best_product_url ? `
+                        <a href="${p.best_product_url}" target="_blank" class="p-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs transition-colors" title="Buy on ${p.best_store_name}">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    ` : ''}
+                </div>
+            </div>
+            `;
+        }).join('');
+    } catch(err) {
+        console.error(err);
+        grid.innerHTML = '<div class="col-span-full text-center text-red-400 py-8">Failed to load deals data.</div>';
+    }
+}
+
+function filterDeals(minPct) {
+    currentMinDiscount = minPct;
+    document.querySelectorAll('.deal-filter-btn').forEach(btn => {
+        if(parseInt(btn.getAttribute('data-pct')) === minPct) {
+            btn.classList.add('bg-amber-600', 'text-white');
+            btn.classList.remove('bg-gray-800', 'text-gray-300');
+        } else {
+            btn.classList.remove('bg-amber-600', 'text-white');
+            btn.classList.add('bg-gray-800', 'text-gray-300');
+        }
+    });
+    loadDeals();
+}
+
+document.addEventListener('DOMContentLoaded', loadDeals);
+</script>
+{% endblock %}

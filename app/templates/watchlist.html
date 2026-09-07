@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+
+{% block title %}My Watchlist & Price Drop Alerts | TechPrice{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header Banner -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-800 pb-6">
+        <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-800/50 text-cyan-400 text-xs font-semibold mb-2">
+                <i class="fa-solid fa-bell text-amber-400"></i>
+                Real-Time Price Drop Alert Manager
+            </div>
+            <h1 class="text-2xl md:text-3xl font-extrabold text-white">My Watchlist & Target Prices</h1>
+            <p class="text-sm text-gray-400 mt-1">
+                Manage hardware items you are monitoring across <strong>JIB, iHaveCPU, BaNANA, and Advice</strong>.
+            </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button onclick="openAddAlertModal()" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shadow-lg transition-all flex items-center gap-2">
+                <i class="fa-solid fa-plus"></i> Track New Item
+            </button>
+        </div>
+    </div>
+
+    <!-- Quick Stats Cards -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="p-4 rounded-xl bg-[#111827] border border-gray-800 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-cyan-950 text-cyan-400 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-list-check"></i>
+            </div>
+            <div>
+                <div class="text-lg font-bold text-white" id="stat-tracked-count">0</div>
+                <div class="text-[11px] text-gray-400 font-medium">Tracked Items</div>
+            </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-[#111827] border border-gray-800 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-emerald-950 text-emerald-400 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-fire"></i>
+            </div>
+            <div>
+                <div class="text-lg font-bold text-emerald-400" id="stat-triggered-count">0</div>
+                <div class="text-[11px] text-gray-400 font-medium">Deals Reached Target</div>
+            </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-[#111827] border border-gray-800 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-blue-950 text-blue-400 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-store"></i>
+            </div>
+            <div>
+                <div class="text-lg font-bold text-white">4 Stores</div>
+                <div class="text-[11px] text-gray-400 font-medium">JIB, iHaveCPU, BaNANA, Advice</div>
+            </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-[#111827] border border-gray-800 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-purple-950 text-purple-400 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+            <div>
+                <div class="text-lg font-bold text-purple-400">Live</div>
+                <div class="text-[11px] text-gray-400 font-medium">Auto-Dispatched Alerts</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Watchlist Items Table / Container -->
+    <div class="rounded-2xl border border-gray-800 bg-[#0f172a] shadow-xl overflow-hidden">
+        <div class="p-4 border-b border-gray-800 flex items-center justify-between">
+            <h3 class="text-xs uppercase font-bold text-gray-300 tracking-wider flex items-center gap-2">
+                <i class="fa-solid fa-table-list text-cyan-400"></i> Active Price Monitors
+            </h3>
+            <span class="text-xs text-gray-500" id="watchlist-count-label">Loading watchlist...</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs sm:text-sm">
+                <thead class="bg-gray-900/90 text-gray-400 uppercase text-[11px] font-semibold border-b border-gray-800">
+                    <tr>
+                        <th class="py-3 px-4">Hardware Item</th>
+                        <th class="py-3 px-4">Target Price</th>
+                        <th class="py-3 px-4">Lowest Store Price</th>
+                        <th class="py-3 px-4">Status</th>
+                        <th class="py-3 px-4">Best Store</th>
+                        <th class="py-3 px-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="watchlist-tbody" class="divide-y divide-gray-800/80">
+                    <!-- Populated dynamically via JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Empty Watchlist State -->
+        <div id="watchlist-empty-state" class="hidden p-12 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-cyan-950/60 border border-cyan-800/50 flex items-center justify-center text-cyan-400 text-2xl mx-auto mb-3">
+                <i class="fa-solid fa-bell-slash"></i>
+            </div>
+            <h4 class="text-base font-bold text-gray-200 mb-1">Your Watchlist is Empty</h4>
+            <p class="text-xs text-gray-400 mb-4 max-w-sm mx-auto">
+                Set price drop alerts on your favorite GPUs, CPUs, or Laptops and receive instant notifications when prices drop below your budget!
+            </p>
+            <a href="/" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs transition-colors">
+                Browse Hardware Catalog
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add Item to Watchlist -->
+<div id="add-alert-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-[#0f172a] border border-gray-800 rounded-2xl p-6 shadow-2xl space-y-4">
+        <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-bell text-amber-400"></i> Track Hardware Price
+            </h3>
+            <button onclick="closeAddAlertModal()" class="text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <form id="watchlist-add-form" onsubmit="handleAddWatchlistSubmit(event)" class="space-y-3 text-xs">
+            <div>
+                <label class="block text-gray-300 font-medium mb-1">Select Hardware Item:</label>
+                <select id="watchlist-product-select" required onchange="updateSuggestedTargetPrice(this.value)" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white focus:ring-1 focus:ring-cyan-500">
+                    <option value="">-- Choose Product --</option>
+                    <!-- Populated dynamically -->
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-gray-300 font-medium mb-1">Your Target Alert Price (฿ THB):</label>
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-bold">฿</span>
+                    <input type="number" step="10" id="watchlist-target-price" required placeholder="e.g. 18500" class="w-full bg-gray-900 border border-gray-700 rounded-lg pl-7 pr-3 py-2.5 text-white font-bold focus:ring-1 focus:ring-cyan-500">
+                </div>
+                <span class="text-[11px] text-gray-500 mt-1 block" id="watchlist-current-hint"></span>
+            </div>
+
+            <div id="guest-email-field">
+                <label class="block text-gray-300 font-medium mb-1">Notification Email:</label>
+                <input type="email" id="watchlist-email" placeholder="your.email@example.com" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white focus:ring-1 focus:ring-cyan-500">
+            </div>
+
+            <div class="pt-3 border-t border-gray-800 flex items-center justify-end gap-2">
+                <button type="button" onclick="closeAddAlertModal()" class="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium">
+                    Cancel
+                </button>
+                <button type="submit" class="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold">
+                    Start Tracking
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let watchlistProducts = [];
+
+async function loadWatchlistPage() {
+    const tbody = document.getElementById('watchlist-tbody');
+    const emptyState = document.getElementById('watchlist-empty-state');
+    const countLabel = document.getElementById('watchlist-count-label');
+
+    try {
+        const res = await fetch('/api/alerts/my-watchlist');
+        const items = await res.json();
+
+        document.getElementById('stat-tracked-count').textContent = items.length;
+        const triggered = items.filter(i => i.is_triggered).length;
+        document.getElementById('stat-triggered-count').textContent = triggered;
+        countLabel.textContent = `${items.length} items in watchlist`;
+
+        if (items.length === 0) {
+            tbody.innerHTML = '';
+            emptyState.classList.remove('hidden');
+            return;
+        }
+
+        emptyState.classList.add('hidden');
+        tbody.innerHTML = items.map(item => {
+            const isTargetMet = item.is_triggered;
+            const diff = item.current_lowest_price ? (item.current_lowest_price - item.target_price) : 0;
+
+            const statusBadge = isTargetMet
+                ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1 w-max">
+                     <i class="fa-solid fa-fire text-amber-400"></i> Target Reached (${formatCurrency(Math.abs(diff))} below)
+                   </span>`
+                : `<span class="px-2.5 py-1 rounded-full text-[10px] font-semibold text-gray-400 bg-gray-800 border border-gray-700 w-max block">
+                     Tracking (Needs ${formatCurrency(diff)} drop)
+                   </span>`;
+
+            return `
+            <tr class="hover:bg-gray-800/40 transition-colors">
+                <td class="py-3.5 px-4">
+                    <div class="flex items-center gap-3">
+                        <img src="${item.product_image || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=100'}" class="w-10 h-10 rounded-lg object-cover bg-gray-900 border border-gray-700">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase text-cyan-400">${item.product_brand} • ${item.product_category}</span>
+                            <div class="text-xs sm:text-sm font-bold text-white line-clamp-1">${item.product_name}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="py-3.5 px-4">
+                    <span class="text-xs sm:text-sm font-mono font-bold text-amber-400">${formatCurrency(item.target_price)}</span>
+                </td>
+                <td class="py-3.5 px-4">
+                    <span class="text-xs sm:text-sm font-extrabold ${isTargetMet ? 'text-emerald-400' : 'text-white'}">
+                        ${formatCurrency(item.current_lowest_price)}
+                    </span>
+                </td>
+                <td class="py-3.5 px-4">
+                    ${statusBadge}
+                </td>
+                <td class="py-3.5 px-4 text-xs font-bold text-gray-300">
+                    ${item.best_store_name || 'Multi-Store'}
+                </td>
+                <td class="py-3.5 px-4 text-right">
+                    <div class="flex items-center justify-end gap-2">
+                        ${item.best_product_url ? `
+                            <a href="${item.best_product_url}" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors flex items-center gap-1 shadow">
+                                <span>Buy</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                            </a>
+                        ` : ''}
+                        <button onclick="deleteWatchlistItem(${item.id})" class="p-1.5 rounded-lg bg-gray-800 hover:bg-red-600 text-gray-400 hover:text-white transition-colors" title="Delete alert">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            `;
+        }).join('');
+
+    } catch (err) {
+        console.error('Error loading watchlist:', err);
+    }
+}
+
+async function loadProductsForAddModal() {
+    try {
+        const res = await fetch('/api/products?limit=100');
+        watchlistProducts = await res.json();
+        const select = document.getElementById('watchlist-product-select');
+        select.innerHTML = '<option value="">-- Choose Product --</option>' + watchlistProducts.map(p => `
+            <option value="${p.id}" data-price="${p.lowest_price || p.msrp}">${p.name} (Lowest: ${formatCurrency(p.lowest_price || p.msrp)})</option>
+        `).join('');
+    } catch(err) {
+        console.error(err);
+    }
+}
+
+function updateSuggestedTargetPrice(prodId) {
+    if (!prodId) return;
+    const prod = watchlistProducts.find(p => p.id === parseInt(prodId));
+    if (!prod) return;
+    const currPrice = prod.lowest_price || prod.msrp || 10000;
+    const suggested = Math.round((currPrice * 0.95) / 10) * 10;
+    document.getElementById('watchlist-target-price').value = suggested;
+    document.getElementById('watchlist-current-hint').textContent = `Current lowest: ${formatCurrency(currPrice)}. Recommended target: ${formatCurrency(suggested)} (5% drop)`;
+}
+
+function openAddAlertModal() {
+    document.getElementById('add-alert-modal').classList.remove('hidden');
+    loadProductsForAddModal();
+}
+
+function closeAddAlertModal() {
+    document.getElementById('add-alert-modal').classList.add('hidden');
+}
+
+async function handleAddWatchlistSubmit(e) {
+    e.preventDefault();
+    const prodId = parseInt(document.getElementById('watchlist-product-select').value);
+    const targetPrice = parseFloat(document.getElementById('watchlist-target-price').value);
+    const emailInput = document.getElementById('watchlist-email').value;
+
+    try {
+        const res = await fetch('/api/alerts', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                product_id: prodId,
+                target_price: targetPrice,
+                currency: 'THB',
+                email: emailInput || 'gamer@demo.com'
+            })
+        });
+
+        if (res.ok) {
+            showToast('Item added to your watchlist!', 'success');
+            closeAddAlertModal();
+            loadWatchlistPage();
+            checkNotificationsCount();
+        } else {
+            const data = await res.json();
+            showToast(data.detail || 'Failed to add item', 'error');
+        }
+    } catch(err) {
+        showToast(err.message, 'error');
+    }
+}
+
+async function deleteWatchlistItem(alertId) {
+    if(!confirm('Remove this item from your watchlist?')) return;
+    try {
+        const res = await fetch(`/api/alerts/${alertId}`, { method: 'DELETE' });
+        if (res.ok) {
+            showToast('Item removed from watchlist', 'info');
+            loadWatchlistPage();
+        }
+    } catch(err) {
+        showToast('Failed to delete item', 'error');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadWatchlistPage();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,30 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Databases & Logs
+*.db
+*.sqlite3
+uvicorn.log
+*.log
+
+# Scratch & Downloaded test files
+jib_home.html
+scratch/
+
+# Environment variables & secrets
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db

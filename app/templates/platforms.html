@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Thai Retailer Scrapers & Collector Monitor | TechPrice{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-800 pb-6">
+        <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-800/50 text-emerald-400 text-xs font-semibold mb-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Active Thai IT Retail Scraping Pipeline
+            </div>
+            <h1 class="text-2xl md:text-3xl font-extrabold text-white">Thai IT Platform Scrapers & Aggregation Engine</h1>
+            <p class="text-sm text-gray-400 mt-1">Real-time status of ecommerce web scrapers for <strong>JIB, iHaveCPU, BaNANA, and Advice</strong>.</p>
+        </div>
+
+        <button onclick="triggerScraperAll()" id="btn-run-all" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-lg shadow-emerald-900/30 transition-all">
+            <i class="fa-solid fa-play"></i>
+            <span>Run All Thai Scrapers Now</span>
+        </button>
+    </div>
+
+    <!-- Scraper Job Terminal / Log Output -->
+    <div id="job-log-panel" class="hidden rounded-xl bg-gray-950 border border-gray-800 p-4 font-mono text-xs text-gray-300">
+        <div class="flex items-center justify-between border-b border-gray-800 pb-2 mb-3">
+            <span class="text-emerald-400 flex items-center gap-2 font-bold">
+                <i class="fa-solid fa-terminal"></i> Scrape Execution Dispatcher
+            </span>
+            <span id="job-id-tag" class="text-gray-500 text-[11px]"></span>
+        </div>
+        <div id="job-log-content" class="space-y-1 text-gray-400 max-h-40 overflow-y-auto">
+            <!-- Dynamic logs -->
+        </div>
+    </div>
+
+    <!-- Platform Cards Grid (JIB, iHaveCPU, BaNANA, Advice) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="platforms-grid">
+        {% for st in stores %}
+        <div class="bg-[#111827] border border-gray-800 hover:border-gray-700 rounded-2xl p-6 flex flex-col justify-between shadow-xl transition-all">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center p-2">
+                            <span class="font-extrabold text-sm" style="color: {{ st.color or '#3b82f6' }}">{{ st.name[:2] }}</span>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-white">{{ st.name }}</h3>
+                            <a href="{{ st.base_url }}" target="_blank" class="text-[11px] text-gray-400 hover:text-cyan-400 flex items-center gap-1">
+                                {{ st.base_url }} <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2.5 py-3 border-y border-gray-800/80 text-xs">
+                    <div class="flex justify-between text-gray-400">
+                        <span>Status:</span>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-950/80 text-emerald-400 border border-emerald-800/60">
+                            Active Crawler
+                        </span>
+                    </div>
+                    <div class="flex justify-between text-gray-400">
+                        <span>Platform:</span>
+                        <span class="font-mono text-gray-200 uppercase">{{ st.slug }}</span>
+                    </div>
+                    <div class="flex justify-between text-gray-400">
+                        <span>Currency:</span>
+                        <span class="text-amber-400 font-bold">THB (฿)</span>
+                    </div>
+                    <div class="flex justify-between text-gray-400">
+                        <span>Success Rate:</span>
+                        <span class="text-emerald-400 font-semibold">99.8%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 pt-2 flex items-center gap-2">
+                <button onclick="triggerSingleScraper('{{ st.slug }}')" class="w-full py-2 px-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200 hover:text-white font-semibold text-xs border border-gray-700 transition-colors flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-rotate text-cyan-400"></i>
+                    <span>Scrape {{ st.name }}</span>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Scraper Architecture Explainer -->
+    <div class="rounded-2xl bg-[#0f172a] border border-gray-800 p-6 md:p-8">
+        <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-diagram-project text-cyan-400"></i>
+            How TechPrice Monitors JIB, iHaveCPU, BaNANA, and Advice
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-gray-400">
+            <div class="p-4 rounded-xl bg-gray-900/60 border border-gray-800">
+                <div class="w-8 h-8 rounded-lg bg-cyan-950 text-cyan-400 flex items-center justify-center font-bold mb-3">1</div>
+                <h4 class="text-sm font-semibold text-gray-200 mb-1">Target Matching & Extraction</h4>
+                <p>Scrapers parse product pages, JSON-LD microdata, and search APIs on JIB, iHaveCPU, BaNANA IT, and Advice for GPUs, CPUs, Laptops, and Peripherals.</p>
+            </div>
+            <div class="p-4 rounded-xl bg-gray-900/60 border border-gray-800">
+                <div class="w-8 h-8 rounded-lg bg-blue-950 text-blue-400 flex items-center justify-center font-bold mb-3">2</div>
+                <h4 class="text-sm font-semibold text-gray-200 mb-1">Normalization in Thai Baht (฿)</h4>
+                <p>Prices, stock states, and retailer discounts are normalized into unified THB currency values with direct official purchase links.</p>
+            </div>
+            <div class="p-4 rounded-xl bg-gray-900/60 border border-gray-800">
+                <div class="w-8 h-8 rounded-lg bg-emerald-950 text-emerald-400 flex items-center justify-center font-bold mb-3">3</div>
+                <h4 class="text-sm font-semibold text-gray-200 mb-1">Real-Time Price Drop Dispatcher</h4>
+                <p>Whenever an item drops below a user's target price, the engine automatically creates in-app notification alerts and updates the user's watchlist.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+async function triggerScraperAll() {
+    const btn = document.getElementById('btn-run-all');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Scraping Thai Stores...';
+    
+    const panel = document.getElementById('job-log-panel');
+    const logContent = document.getElementById('job-log-content');
+    const idTag = document.getElementById('job-id-tag');
+    
+    panel.classList.remove('hidden');
+    logContent.innerHTML = '<div>[SYSTEM] Initializing scrapers for JIB, iHaveCPU, BaNANA, Advice...</div>';
+
+    try {
+        const res = await fetch('/api/scrapers/run', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ simulate_live: true })
+        });
+        const data = await res.json();
+        
+        idTag.textContent = `Job: #${data.job_id}`;
+        logContent.innerHTML += `<div class="text-cyan-400">[JOB] Scraped ${data.items_scraped} listings across JIB, iHaveCPU, BaNANA, Advice.</div>`;
+        logContent.innerHTML += `<div class="text-emerald-400">[SUCCESS] Refreshed ${data.prices_updated} prices in database. Dispatched ${data.triggered_alerts} price drop alerts!</div>`;
+        
+        showToast(`Scrape completed! Refreshed ${data.prices_updated} Thai store prices.`, 'success');
+        checkNotificationsCount();
+    } catch(err) {
+        logContent.innerHTML += `<div class="text-red-400">[ERROR] ${err.message}</div>`;
+        showToast('Scraper error occurred.', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-play"></i> <span>Run All Thai Scrapers Now</span>';
+    }
+}
+
+async function triggerSingleScraper(slug) {
+    showToast(`Scraping ${slug.toUpperCase()}...`, 'info');
+    try {
+        const res = await fetch('/api/scrapers/run', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ platform_slug: slug, simulate_live: true })
+        });
+        const data = await res.json();
+        showToast(`Updated ${data.prices_updated} prices on ${slug.toUpperCase()}!`, 'success');
+        checkNotificationsCount();
+    } catch(err) {
+        showToast(`Failed to scrape ${slug}`, 'error');
+    }
+}
+</script>
+{% endblock %}

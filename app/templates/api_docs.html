@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+
+{% block title %}REST API Documentation & Interactive Explorer | TechPrice{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-800 pb-6">
+        <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/60 border border-purple-800/50 text-purple-400 text-xs font-semibold mb-2">
+                <i class="fa-solid fa-code"></i> Developer REST API & Webhooks
+            </div>
+            <h1 class="text-2xl md:text-3xl font-extrabold text-white">TechPrice API Explorer & Reference</h1>
+            <p class="text-sm text-gray-400 mt-1">Integrate real-time IT equipment pricing, multi-platform comparisons, and price history in your apps.</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <a href="/docs" target="_blank" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs transition-colors flex items-center gap-2 shadow-lg">
+                <i class="fa-solid fa-bolt"></i> Interactive Swagger UI
+            </a>
+            <a href="/redoc" target="_blank" class="px-4 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold text-xs border border-gray-700 transition-colors">
+                ReDoc
+            </a>
+        </div>
+    </div>
+
+    <!-- Interactive API Playground Endpoints -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left: Endpoint Selector List -->
+        <div class="space-y-2">
+            <h2 class="text-xs uppercase font-bold text-gray-400 tracking-wider mb-3">API Endpoints</h2>
+            
+            <button onclick="selectEndpoint('get_products')" class="api-nav-btn active w-full text-left p-3 rounded-xl bg-gray-800 border border-cyan-500/50 text-white text-xs transition-all flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-mono font-bold text-[10px]">GET</span>
+                    <span class="font-mono">/api/products</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
+            </button>
+
+            <button onclick="selectEndpoint('get_product_detail')" class="api-nav-btn w-full text-left p-3 rounded-xl bg-gray-900 hover:bg-gray-800 border border-gray-800 text-gray-300 hover:text-white text-xs transition-all flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-mono font-bold text-[10px]">GET</span>
+                    <span class="font-mono">/api/products/{id}</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
+            </button>
+
+            <button onclick="selectEndpoint('compare')" class="api-nav-btn w-full text-left p-3 rounded-xl bg-gray-900 hover:bg-gray-800 border border-gray-800 text-gray-300 hover:text-white text-xs transition-all flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-mono font-bold text-[10px]">GET</span>
+                    <span class="font-mono">/api/compare?ids=1,2,3</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
+            </button>
+
+            <button onclick="selectEndpoint('price_history')" class="api-nav-btn w-full text-left p-3 rounded-xl bg-gray-900 hover:bg-gray-800 border border-gray-800 text-gray-300 hover:text-white text-xs transition-all flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-mono font-bold text-[10px]">GET</span>
+                    <span class="font-mono">/api/prices/history/{id}</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
+            </button>
+
+            <button onclick="selectEndpoint('search_suggestions')" class="api-nav-btn w-full text-left p-3 rounded-xl bg-gray-900 hover:bg-gray-800 border border-gray-800 text-gray-300 hover:text-white text-xs transition-all flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-mono font-bold text-[10px]">GET</span>
+                    <span class="font-mono">/api/search/suggestions</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
+            </button>
+
+            <button onclick="selectEndpoint('run_scrapers')" class="api-nav-btn w-full text-left p-3 rounded-xl bg-gray-900 hover:bg-gray-800 border border-gray-800 text-gray-300 hover:text-white text-xs transition-all flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded bg-blue-950 text-blue-400 font-mono font-bold text-[10px]">POST</span>
+                    <span class="font-mono">/api/scrapers/run</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
+            </button>
+
+            <button onclick="selectEndpoint('export_csv')" class="api-nav-btn w-full text-left p-3 rounded-xl bg-gray-900 hover:bg-gray-800 border border-gray-800 text-gray-300 hover:text-white text-xs transition-all flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded bg-purple-950 text-purple-400 font-mono font-bold text-[10px]">GET</span>
+                    <span class="font-mono">/api/export/csv</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-500 text-[10px]"></i>
+            </button>
+        </div>
+
+        <!-- Right: Interactive Tester & Code Samples -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- Active Endpoint Details Card -->
+            <div class="rounded-2xl bg-[#0f172a] border border-gray-800 p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span id="endpoint-method" class="px-2.5 py-1 rounded bg-emerald-950 text-emerald-400 font-mono font-bold text-xs">GET</span>
+                        <span id="endpoint-url" class="font-mono text-sm font-bold text-white">/api/products</span>
+                    </div>
+                    <button onclick="executeApiTest()" id="btn-test-api" class="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs flex items-center gap-1.5 transition-colors shadow">
+                        <i class="fa-solid fa-play text-[10px]"></i>
+                        <span>Send Request</span>
+                    </button>
+                </div>
+
+                <p id="endpoint-desc" class="text-xs text-gray-400">
+                    Fetch a paginated list of IT equipment hardware with lowest prices, store breakdown, and max discount percentages.
+                </p>
+
+                <!-- Parameter Inputs -->
+                <div id="endpoint-params" class="p-3 bg-gray-900 rounded-xl border border-gray-800 space-y-2 text-xs">
+                    <div class="text-[11px] font-bold uppercase text-gray-400">Query Parameters</div>
+                    <div id="params-container" class="space-y-2">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- Code Example Tabs (cURL, Python, JS) -->
+                <div>
+                    <div class="flex items-center justify-between border-b border-gray-800 pb-2 mb-2">
+                        <div class="flex items-center gap-2 text-xs">
+                            <button onclick="setTab('curl')" class="code-tab active text-cyan-400 font-semibold px-2 py-1" data-tab="curl">cURL</button>
+                            <button onclick="setTab('python')" class="code-tab text-gray-400 hover:text-white px-2 py-1" data-tab="python">Python</button>
+                            <button onclick="setTab('js')" class="code-tab text-gray-400 hover:text-white px-2 py-1" data-tab="js">JavaScript</button>
+                        </div>
+                        <button onclick="copyCode()" class="text-gray-400 hover:text-white text-xs flex items-center gap-1">
+                            <i class="fa-solid fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre id="code-snippet" class="p-4 rounded-xl bg-gray-950 border border-gray-800 text-cyan-300 font-mono text-xs overflow-x-auto"></pre>
+                </div>
+
+                <!-- Live Response Output -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold uppercase text-gray-400">Response</span>
+                        <span id="response-status" class="text-xs font-mono text-gray-500">Status: Idle</span>
+                    </div>
+                    <pre id="response-output" class="p-4 rounded-xl bg-gray-950 border border-gray-800 text-gray-300 font-mono text-xs max-h-72 overflow-y-auto">// Click "Send Request" to test this endpoint live.</pre>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const ENDPOINTS = {
+    get_products: {
+        method: 'GET',
+        url: '/api/products',
+        desc: 'Fetch filtered and sorted IT equipment items with lowest platform prices.',
+        params: [
+            { name: 'category', default: 'Graphics Cards (GPU)', desc: 'Category filter' },
+            { name: 'sort_by', default: 'cheapest', desc: 'cheapest, discount, expensive, name' },
+            { name: 'limit', default: '5', desc: 'Item limit' }
+        ],
+        code: {
+            curl: 'curl -X GET "http://localhost:8000/api/products?category=Graphics%20Cards%20(GPU)&limit=5"',
+            python: 'import requests\n\nres = requests.get("http://localhost:8000/api/products", params={"category": "Graphics Cards (GPU)", "limit": 5})\nprint(res.json())',
+            js: 'fetch("/api/products?category=Graphics%20Cards%20(GPU)&limit=5")\n  .then(res => res.json())\n  .then(data => console.log(data));'
+        }
+    },
+    get_product_detail: {
+        method: 'GET',
+        url: '/api/products/1',
+        desc: 'Retrieve comprehensive side-by-side platform listings, price differences, and specs for a specific product ID.',
+        params: [
+            { name: 'id', default: '1', desc: 'Product ID' }
+        ],
+        code: {
+            curl: 'curl -X GET "http://localhost:8000/api/products/1"',
+            python: 'import requests\n\nres = requests.get("http://localhost:8000/api/products/1")\nprint(res.json())',
+            js: 'fetch("/api/products/1")\n  .then(res => res.json())\n  .then(data => console.log(data));'
+        }
+    },
+    compare: {
+        method: 'GET',
+        url: '/api/compare',
+        desc: 'Multi-product side-by-side spec comparison matrix and price winner detection.',
+        params: [
+            { name: 'ids', default: '1,2,3', desc: 'Comma-separated product IDs' }
+        ],
+        code: {
+            curl: 'curl -X GET "http://localhost:8000/api/compare?ids=1,2,3"',
+            python: 'import requests\n\nres = requests.get("http://localhost:8000/api/compare", params={"ids": "1,2,3"})\nprint(res.json())',
+            js: 'fetch("/api/compare?ids=1,2,3")\n  .then(res => res.json())\n  .then(data => console.log(data));'
+        }
+    },
+    price_history: {
+        method: 'GET',
+        url: '/api/prices/history/1',
+        desc: 'Historical multi-store price data points for charting price trends.',
+        params: [
+            { name: 'product_id', default: '1', desc: 'Product ID' },
+            { name: 'days', default: '30', desc: 'Number of days' }
+        ],
+        code: {
+            curl: 'curl -X GET "http://localhost:8000/api/prices/history/1?days=30"',
+            python: 'import requests\n\nres = requests.get("http://localhost:8000/api/prices/history/1", params={"days": 30})\nprint(res.json())',
+            js: 'fetch("/api/prices/history/1?days=30")\n  .then(res => res.json())\n  .then(data => console.log(data));'
+        }
+    },
+    search_suggestions: {
+        method: 'GET',
+        url: '/api/search/suggestions',
+        desc: 'Fast autocomplete search suggestions for search inputs.',
+        params: [
+            { name: 'q', default: 'RTX', desc: 'Search query' }
+        ],
+        code: {
+            curl: 'curl -X GET "http://localhost:8000/api/search/suggestions?q=RTX"',
+            python: 'import requests\n\nres = requests.get("http://localhost:8000/api/search/suggestions", params={"q": "RTX"})\nprint(res.json())',
+            js: 'fetch("/api/search/suggestions?q=RTX")\n  .then(res => res.json())\n  .then(data => console.log(data));'
+        }
+    },
+    run_scrapers: {
+        method: 'POST',
+        url: '/api/scrapers/run',
+        desc: 'Trigger on-demand scraping and price updates across platforms.',
+        params: [
+            { name: 'simulate_live', default: 'true', desc: 'Simulate live market variance' }
+        ],
+        code: {
+            curl: 'curl -X POST "http://localhost:8000/api/scrapers/run" -H "Content-Type: application/json" -d \'{"simulate_live": true}\'',
+            python: 'import requests\n\nres = requests.post("http://localhost:8000/api/scrapers/run", json={"simulate_live": True})\nprint(res.json())',
+            js: 'fetch("/api/scrapers/run", {\n  method: "POST",\n  headers: {"Content-Type": "application/json"},\n  body: JSON.stringify({simulate_live: true})\n}).then(res => res.json()).then(data => console.log(data));'
+        }
+    },
+    export_csv: {
+        method: 'GET',
+        url: '/api/export/csv',
+        desc: 'Export the complete normalized IT equipment price comparison matrix as CSV.',
+        params: [],
+        code: {
+            curl: 'curl -X GET "http://localhost:8000/api/export/csv" -o prices.csv',
+            python: 'import requests\n\nres = requests.get("http://localhost:8000/api/export/csv")\nwith open("prices.csv", "wb") as f:\n    f.write(res.content)',
+            js: 'window.open("/api/export/csv");'
+        }
+    }
+};
+
+let currentKey = 'get_products';
+let currentTab = 'curl';
+
+function selectEndpoint(key) {
+    currentKey = key;
+    const ep = ENDPOINTS[key];
+    
+    document.querySelectorAll('.api-nav-btn').forEach(btn => {
+        btn.classList.remove('active', 'border-cyan-500/50', 'bg-gray-800');
+        btn.classList.add('bg-gray-900');
+    });
+    event.currentTarget.classList.add('active', 'border-cyan-500/50', 'bg-gray-800');
+    
+    document.getElementById('endpoint-method').textContent = ep.method;
+    document.getElementById('endpoint-url').textContent = ep.url;
+    document.getElementById('endpoint-desc').textContent = ep.desc;
+    
+    // Render params
+    const container = document.getElementById('params-container');
+    if(ep.params.length === 0) {
+        container.innerHTML = '<span class="text-gray-500 italic">No parameters required.</span>';
+    } else {
+        container.innerHTML = ep.params.map(p => `
+            <div class="flex items-center gap-2">
+                <span class="font-mono text-cyan-400 w-24">${p.name}:</span>
+                <input type="text" id="param-${p.name}" value="${p.default}" class="flex-1 bg-gray-950 border border-gray-800 rounded px-2 py-1 text-white font-mono text-xs">
+                <span class="text-gray-500 text-[11px]">${p.desc}</span>
+            </div>
+        `).join('');
+    }
+    
+    updateCodeSnippet();
+    document.getElementById('response-output').textContent = '// Click "Send Request" to test this endpoint live.';
+    document.getElementById('response-status').textContent = 'Status: Idle';
+}
+
+function setTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.code-tab').forEach(t => {
+        if(t.getAttribute('data-tab') === tab) {
+            t.classList.add('active', 'text-cyan-400', 'font-semibold');
+            t.classList.remove('text-gray-400');
+        } else {
+            t.classList.remove('active', 'text-cyan-400', 'font-semibold');
+            t.classList.add('text-gray-400');
+        }
+    });
+    updateCodeSnippet();
+}
+
+function updateCodeSnippet() {
+    const ep = ENDPOINTS[currentKey];
+    document.getElementById('code-snippet').textContent = ep.code[currentTab];
+}
+
+async function executeApiTest() {
+    const ep = ENDPOINTS[currentKey];
+    const btn = document.getElementById('btn-test-api');
+    const resOutput = document.getElementById('response-output');
+    const statusTag = document.getElementById('response-status');
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+    resOutput.textContent = 'Sending request to server...';
+
+    try {
+        let requestUrl = ep.url;
+        let options = { method: ep.method };
+
+        if(currentKey === 'get_products') {
+            const cat = document.getElementById('param-category')?.value;
+            const sort = document.getElementById('param-sort_by')?.value;
+            const limit = document.getElementById('param-limit')?.value;
+            requestUrl = `/api/products?category=${encodeURIComponent(cat)}&sort_by=${sort}&limit=${limit}`;
+        } else if(currentKey === 'get_product_detail') {
+            const id = document.getElementById('param-id')?.value || '1';
+            requestUrl = `/api/products/${id}`;
+        } else if(currentKey === 'compare') {
+            const ids = document.getElementById('param-ids')?.value || '1,2';
+            requestUrl = `/api/compare?ids=${ids}`;
+        } else if(currentKey === 'price_history') {
+            const pid = document.getElementById('param-product_id')?.value || '1';
+            const days = document.getElementById('param-days')?.value || '30';
+            requestUrl = `/api/prices/history/${pid}?days=${days}`;
+        } else if(currentKey === 'search_suggestions') {
+            const q = document.getElementById('param-q')?.value || 'RTX';
+            requestUrl = `/api/search/suggestions?q=${encodeURIComponent(q)}`;
+        } else if(currentKey === 'run_scrapers') {
+            options.headers = {'Content-Type': 'application/json'};
+            options.body = JSON.stringify({ simulate_live: true });
+        }
+
+        const t0 = performance.now();
+        const response = await fetch(requestUrl, options);
+        const t1 = performance.now();
+        const duration = Math.round(t1 - t0);
+
+        statusTag.innerHTML = `<span class="${response.ok ? 'text-emerald-400' : 'text-red-400'} font-bold">HTTP ${response.status} ${response.statusText} (${duration}ms)</span>`;
+
+        if (currentKey === 'export_csv') {
+            const text = await response.text();
+            resOutput.textContent = text.slice(0, 1000) + '\n... [CSV truncated]';
+        } else {
+            const data = await response.json();
+            resOutput.textContent = JSON.stringify(data, null, 2);
+        }
+    } catch(err) {
+        statusTag.innerHTML = `<span class="text-red-400 font-bold">Error</span>`;
+        resOutput.textContent = `Request failed: ${err.message}`;
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-play text-[10px]"></i> <span>Send Request</span>';
+    }
+}
+
+function copyCode() {
+    const text = document.getElementById('code-snippet').textContent;
+    navigator.clipboard.writeText(text);
+    showToast('Code snippet copied to clipboard!', 'info');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    selectEndpoint('get_products');
+});
+</script>
+{% endblock %}
