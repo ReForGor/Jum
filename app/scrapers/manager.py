@@ -16,6 +16,7 @@ from app.scrapers.ihavecpu import IHaveCPUScraper
 from app.scrapers.banana import BananaScraper
 from app.scrapers.advice import AdviceScraper
 from app.scrapers.mock_engine import MockLiveScraper
+from app.utils.store_urls import generate_store_product_url
 
 logger = logging.getLogger(__name__)
 
@@ -115,7 +116,13 @@ class ScraperManager:
                                 listing.review_count = scraped_data.get("review_count", 1200)
                                 listing.last_checked = now
                             else:
-                                prod_url = scraped_data.get("product_url") or f"{store.base_url}/search?q={prod.name.replace(' ', '+')}"
+                                prod_url = scraped_data.get("product_url") or generate_store_product_url(
+                                    store_slug=store.slug,
+                                    product_name=prod.name,
+                                    brand=prod.brand,
+                                    model_no=prod.model_no,
+                                    product_slug=prod.slug
+                                )
                                 listing = PriceListing(
                                     product_id=prod.id,
                                     store_id=store.id,

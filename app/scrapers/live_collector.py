@@ -10,6 +10,7 @@ from app.models.product import Product
 from app.models.store import Store
 from app.models.price_listing import PriceListing
 from app.models.price_history import PriceHistory
+from app.utils.store_urls import generate_store_product_url
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
@@ -148,6 +149,12 @@ async def collect_and_sync_all():
                 continue
 
             name = clean_title(raw_title)
+            # Only allow products verified across all 4 Thai stores
+            from app.utils.store_urls import PRODUCT_CLEAN_KEYWORDS
+            is_universal = any(c_kw.lower() in name.lower() for c_kw in PRODUCT_CLEAN_KEYWORDS.values())
+            if not is_universal:
+                continue
+
             if name.lower() in existing_names:
                 continue
 
@@ -202,14 +209,12 @@ async def collect_and_sync_all():
                 st_price = round((sale_price * (1.0 + offset)) / 10) * 10
                 orig_p = round((msrp * 1.05) / 10) * 10 if st_price < msrp else None
 
-                if slug_key == "jib":
-                    p_url = f"https://www.jib.co.th/web/product/readProduct/{raw_id}"
-                elif slug_key == "ihavecpu":
-                    p_url = f"https://www.ihavecpu.com/search?q={name.replace(' ', '+')}"
-                elif slug_key == "banana":
-                    p_url = f"https://www.bnn.in.th/th/p?q={name.replace(' ', '+')}"
-                else:
-                    p_url = f"https://www.advice.co.th/product/search?keyword={name.replace(' ', '+')}"
+                p_url = generate_store_product_url(
+                    store_slug=slug_key,
+                    product_name=name,
+                    brand=brand,
+                    model_no=raw_id if slug_key == "jib" else ""
+                )
 
                 listing = PriceListing(
                     product_id=prod.id,

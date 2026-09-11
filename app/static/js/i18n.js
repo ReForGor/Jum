@@ -84,17 +84,19 @@ const TRANSLATIONS = {
         card_official_price: 'ราคาปกติ',
         card_compare_btn: 'เปรียบเทียบราคา',
         card_add_compare: 'เพิ่มลงตารางเปรียบเทียบ',
-        card_thai_stores: 'ร้านค้า',
+        card_thai_stores: 'ร้านค้าไอทีไทย',
+        all_4_stores_badge: 'ครบทั้ง 4 ร้านค้า',
+        go_to_cart: 'ใส่ตะกร้า (ถูกสุด)',
 
         // Comparison Modal
-        modal_title: 'ตารางเปรียบเทียบราคาร้านค้าไทย',
+        modal_title: 'ตารางเปรียบเทียบราคาร้านค้าไทย (ครบทั้ง 4 ร้าน)',
         modal_sorted: 'เรียงจากราคาถูกที่สุดไปแพงที่สุด',
         modal_th_store: 'ร้านค้า',
         modal_th_stock: 'สถานะสต็อก',
         modal_th_price: 'ราคา',
         modal_th_shipping: 'ค่าจัดส่ง',
         modal_th_total: 'ราคารวม & ส่วนต่าง',
-        modal_th_action: 'สั่งซื้อ',
+        modal_th_action: 'สั่งซื้อ / ใส่ตะกร้า',
         modal_best_deal: 'ราคาดีที่สุด:',
         modal_save_up_to: 'ประหยัดได้สูงสุด',
         modal_history_title: 'กราฟแนวโน้มราคา 30 วัน',
@@ -119,7 +121,7 @@ const TRANSLATIONS = {
         free_shipping: 'ส่งฟรี',
         in_stock: 'มีสินค้า',
         out_of_stock: 'สินค้าหมด',
-        buy_on: 'ซื้อที่',
+        buy_on: 'ใส่ตะกร้าที่',
 
         // Notifications
         notif_header: 'การแจ้งเตือนราคาลด',
@@ -218,16 +220,18 @@ const TRANSLATIONS = {
         card_compare_btn: 'Compare Prices',
         card_add_compare: 'Add to Head-to-Head Compare',
         card_thai_stores: 'Thai Stores',
+        all_4_stores_badge: 'All 4 Stores Available',
+        go_to_cart: 'Add to Cart (Best)',
 
         // Comparison Modal
-        modal_title: 'Thai Retailer Price Comparison',
+        modal_title: 'Thai Retailer Price Comparison (All 4 Stores)',
         modal_sorted: 'Sorted from lowest to highest',
         modal_th_store: 'Platform Store',
         modal_th_stock: 'Stock Status',
         modal_th_price: 'Price',
         modal_th_shipping: 'Shipping',
         modal_th_total: 'Total & Diff',
-        modal_th_action: 'Action',
+        modal_th_action: 'Add to Cart',
         modal_best_deal: 'Best Deal:',
         modal_save_up_to: 'Save up to',
         modal_history_title: '30-Day Store Price Trend',
@@ -252,7 +256,7 @@ const TRANSLATIONS = {
         free_shipping: 'Free',
         in_stock: 'In Stock',
         out_of_stock: 'Out of Stock',
-        buy_on: 'Buy on',
+        buy_on: 'Add to Cart at',
 
         // Notifications
         notif_header: 'Price Drop Alerts',

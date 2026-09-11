@@ -11,6 +11,7 @@ from app.models.user import User
 from app.models.alert import PriceAlert
 from app.models.notification import Notification
 from app.auth import hash_password
+from app.utils.store_urls import generate_store_product_url
 
 # Top Thailand IT Hardware Retail Platforms
 THAI_STORES_DATA = [
@@ -418,14 +419,13 @@ async def seed_initial_data(db: AsyncSession):
             orig_p = round((msrp * 1.06) / 10) * 10 if current_p < msrp else None
             
             # Direct Thai store product search/buy link
-            if slug == "jib":
-                p_url = f"https://www.jib.co.th/web/product/search?keyword={prod.name.replace(' ', '+')}"
-            elif slug == "ihavecpu":
-                p_url = f"https://www.ihavecpu.com/search?q={prod.name.replace(' ', '+')}"
-            elif slug == "banana":
-                p_url = f"https://www.bnn.in.th/th/p?q={prod.name.replace(' ', '+')}"
-            else:
-                p_url = f"https://www.advice.co.th/product/search?keyword={prod.name.replace(' ', '+')}"
+            p_url = generate_store_product_url(
+                store_slug=slug,
+                product_name=prod.name,
+                brand=prod.brand,
+                model_no=prod.model_no,
+                product_slug=prod.slug
+            )
 
             listing = PriceListing(
                 product_id=prod.id,

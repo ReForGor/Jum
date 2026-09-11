@@ -1,6 +1,7 @@
 from typing import Optional, Dict, Any
 from bs4 import BeautifulSoup
 from app.scrapers.base import BasePlatformScraper
+from app.utils.store_urls import generate_store_product_url
 
 class BananaScraper(BasePlatformScraper):
     platform_name = "BaNANA IT"
@@ -8,7 +9,7 @@ class BananaScraper(BasePlatformScraper):
     base_url = "https://www.bnn.in.th"
 
     async def scrape_product(self, product_name: str, model_no: Optional[str], product_url: Optional[str] = None) -> Dict[str, Any]:
-        url = product_url or f"https://www.bnn.in.th/th/p?q={product_name.replace(' ', '+')}"
+        url = product_url or generate_store_product_url("banana", product_name, model_no=model_no)
         html = await self.fetch_html(url)
         
         if html:

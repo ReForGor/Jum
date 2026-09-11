@@ -10,6 +10,7 @@ from app.models.price_listing import PriceListing
 from app.models.store import Store
 from app.schemas.product import ProductSummaryOut, ProductDetailOut, ProductCreate
 from app.schemas.listing import PlatformComparisonItem
+from app.utils.store_urls import generate_store_product_url
 
 router = APIRouter(prefix="/api", tags=["Products"])
 
@@ -48,32 +49,39 @@ async def list_products(
     res = await db.execute(query)
     all_products = res.scalars().all()
 
-    # Process pricing summaries and filters
+    # Process pricing summaries and filters (Strictly require all 4 Thai stores)
+    REQUIRED_STORES = {"jib", "ihavecpu", "banana", "advice"}
     results = []
+
     for prod in all_products:
-        active_listings = [l for l in prod.listings if l.is_available and l.price > 0]
+        all_active_listings = [
+            l for l in prod.listings 
+            if l.is_available and l.price > 0 and l.store and l.product_url
+        ]
+        unique_store_slugs = {l.store.slug for l in all_active_listings}
+        
+        # Rule: Any product that does NOT exist across all 4 stores is completely excluded
+        if not REQUIRED_STORES.issubset(unique_store_slugs):
+            continue
+
+        if store_slug and store_slug not in unique_store_slugs:
+            continue
+
+        sorted_listings = sorted(all_active_listings, key=lambda x: x.price)
+        lowest_p = sorted_listings[0].price
+        highest_p = max(l.price for l in all_active_listings)
         
         if store_slug:
-            active_listings = [l for l in active_listings if l.store and l.store.slug == store_slug]
-            if not active_listings:
-                continue
-
-        if not active_listings:
-            lowest_p = prod.msrp
-            highest_p = prod.msrp
-            best_listing = None
-            max_discount = 0.0
+            store_specific = [l for l in all_active_listings if l.store.slug == store_slug]
+            best_listing = store_specific[0] if store_specific else sorted_listings[0]
         else:
-            sorted_listings = sorted(active_listings, key=lambda x: x.price)
-            lowest_p = sorted_listings[0].price
-            highest_p = max(l.price for l in active_listings)
             best_listing = sorted_listings[0]
             
-            discounts = [
-                ((l.original_price - l.price) / l.original_price * 100)
-                for l in active_listings if l.original_price and l.original_price > l.price
-            ]
-            max_discount = max(discounts) if discounts else 0.0
+        discounts = [
+            ((l.original_price - l.price) / l.original_price * 100)
+            for l in all_active_listings if l.original_price and l.original_price > l.price
+        ]
+        max_discount = max(discounts) if discounts else 0.0
 
         # Price range filter check
         if min_price is not None and lowest_p is not None and lowest_p < min_price:
@@ -96,10 +104,21 @@ async def list_products(
             updated_at=prod.updated_at,
             lowest_price=lowest_p,
             highest_price=highest_p,
-            store_count=len(active_listings),
+            store_count=len(all_active_listings),
             best_store_name=best_listing.store.name if best_listing and best_listing.store else None,
             best_store_logo=best_listing.store.logo_url if best_listing and best_listing.store else None,
-            best_product_url=best_listing.product_url if best_listing else None,
+            best_product_url=(
+                generate_store_product_url(
+                    best_listing.store.slug,
+                    prod.name,
+                    prod.brand,
+                    prod.model_no,
+                    best_listing.product_url,
+                    product_slug=prod.slug
+                )
+                if best_listing and best_listing.store
+                else None
+            ),
             max_discount_percent=round(max_discount, 1)
         )
         results.append(item)
@@ -132,28 +151,16 @@ async def get_product_detail(product_id: int, db: AsyncSession = Depends(get_db)
     if not prod:
         raise HTTPException(status_code=404, detail="Product not found")
 
-    active_listings = [l for l in prod.listings if l.is_available and l.price > 0]
-    
-    if not active_listings:
-        return ProductDetailOut(
-            id=prod.id,
-            name=prod.name,
-            slug=prod.slug,
-            category=prod.category,
-            brand=prod.brand,
-            model_no=prod.model_no,
-            image_url=prod.image_url,
-            description=prod.description,
-            msrp=prod.msrp,
-            specs=prod.specs or {},
-            created_at=prod.created_at,
-            updated_at=prod.updated_at,
-            lowest_price=prod.msrp,
-            highest_price=prod.msrp,
-            avg_price=prod.msrp,
-            total_savings=0.0,
-            best_store=None,
-            platforms=[]
+    REQUIRED_STORES = {"jib", "ihavecpu", "banana", "advice"}
+    active_listings = [
+        l for l in prod.listings 
+        if l.is_available and l.price > 0 and l.store and l.product_url
+    ]
+    unique_stores = {l.store.slug for l in active_listings}
+    if not REQUIRED_STORES.issubset(unique_stores):
+        raise HTTPException(
+            status_code=404, 
+            detail="Product is not available across all 4 required stores (JIB, iHaveCPU, BaNANA, Advice)"
         )
 
     # Find lowest price
@@ -191,7 +198,14 @@ async def get_product_detail(product_id: int, db: AsyncSession = Depends(get_db)
                 stock_status=l.stock_status,
                 shipping_cost=l.shipping_cost,
                 total_price=total_p,
-                product_url=l.product_url,
+                product_url=generate_store_product_url(
+                    store.slug if store else "jib",
+                    prod.name,
+                    prod.brand,
+                    prod.model_no,
+                    l.product_url,
+                    product_slug=prod.slug
+                ),
                 rating=l.rating,
                 review_count=l.review_count,
                 last_checked=l.last_checked

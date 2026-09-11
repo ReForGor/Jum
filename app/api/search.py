@@ -19,7 +19,7 @@ async def search_suggestions(
     search_term = f"%{q.lower()}%"
     query = (
         select(Product)
-        .options(selectinload(Product.listings))
+        .options(selectinload(Product.listings).selectinload(PriceListing.store))
         .where(
             func.lower(Product.name).like(search_term) |
             func.lower(Product.brand).like(search_term) |
@@ -31,8 +31,12 @@ async def search_suggestions(
     prods = res.scalars().all()
 
     suggestions = []
+    REQUIRED_STORES = {"jib", "ihavecpu", "banana", "advice"}
     for p in prods:
-        active = [l for l in p.listings if l.is_available and l.price > 0]
+        active = [l for l in p.listings if l.is_available and l.price > 0 and l.store and l.product_url]
+        unique_stores = {l.store.slug for l in active}
+        if not REQUIRED_STORES.issubset(unique_stores):
+            continue
         min_p = min((l.price for l in active), default=p.msrp)
         suggestions.append({
             "id": p.id,
@@ -41,6 +45,6 @@ async def search_suggestions(
             "brand": p.brand,
             "image_url": p.image_url,
             "lowest_price": min_p,
-            "store_count": len(active)
+            "store_count": 4
         })
     return suggestions

@@ -352,9 +352,9 @@ function renderProductCard(p) {
                     </div>
                 ` : ''}
 
-                <!-- Stores Count Pill -->
-                <div class="absolute bottom-2 right-2 bg-black/80 backdrop-blur-md px-2 py-0.5 rounded text-[10px] text-gray-300 font-medium flex items-center gap-1 border border-gray-700">
-                    <i class="fa-solid fa-store text-cyan-400 text-[9px]"></i> ${p.store_count} ${t('card_thai_stores')}
+                <!-- Stores Count Pill (Strict 4-Store Verification) -->
+                <div class="absolute bottom-2 right-2 bg-black/80 backdrop-blur-md px-2 py-0.5 rounded text-[10px] text-emerald-400 font-bold flex items-center gap-1 border border-emerald-800/80">
+                    <i class="fa-solid fa-circle-check text-emerald-400 text-[9px]"></i> ${t('all_4_stores_badge')}
                 </div>
             </div>
 
@@ -388,9 +388,13 @@ function renderProductCard(p) {
                         <i class="fa-solid fa-crown text-amber-400 text-[10px]"></i>
                         <strong class="text-gray-200">${p.best_store_name || 'JIB / iHaveCPU / Advice'}</strong>
                     </span>
-                    ${savingsAmount ? `
-                        <span class="text-emerald-400 font-medium">${t('card_save')} ${savingsAmount}</span>
-                    ` : `<span class="text-gray-500">${t('card_official_price')}</span>`}
+                    ${p.best_product_url ? `
+                        <a href="${p.best_product_url}" target="_blank" class="px-2 py-0.5 rounded bg-emerald-900/70 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-700/80 font-bold text-[10px] transition-all flex items-center gap-1" title="ไปยังร้านค้าเพื่อใส่ตะกร้า">
+                            <i class="fa-solid fa-cart-shopping text-[9px]"></i>
+                            <span>${t('go_to_cart')}</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                        </a>
+                    ` : (savingsAmount ? `<span class="text-emerald-400 font-medium">${t('card_save')} ${savingsAmount}</span>` : `<span class="text-gray-500">${t('card_official_price')}</span>`)}
                 </div>
             </div>
         </div>
@@ -629,7 +633,9 @@ async function openProductModal(productId) {
                         href="${plat.product_url}" 
                         target="_blank" 
                         class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg ${isLowest ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-gray-800 hover:bg-gray-700 text-gray-200'} font-semibold text-xs transition-colors shadow"
+                        title="ไปยังร้านค้าเพื่อใส่ตะกร้าและสั่งซื้อ"
                     >
+                        <i class="fa-solid fa-cart-shopping text-[11px]"></i>
                         <span>${t('buy_on')} ${plat.store_name}</span>
                         <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
                     </a>

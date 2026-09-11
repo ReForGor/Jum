@@ -8,6 +8,7 @@ from app.models.product import Product
 from app.models.store import Store
 from app.models.price_listing import PriceListing
 from app.models.price_history import PriceHistory
+from app.utils.store_urls import generate_store_product_url
 
 MORE_PRODUCTS = [
     # --- Additional GPUs ---
@@ -590,14 +591,13 @@ async def seed_more_items():
                 current_p = round((msrp * (1.0 + offset)) / 10) * 10
                 orig_p = round((msrp * 1.06) / 10) * 10 if current_p < msrp else None
 
-                if slug == "jib":
-                    p_url = f"https://www.jib.co.th/web/product/search?keyword={prod.name.replace(' ', '+')}"
-                elif slug == "ihavecpu":
-                    p_url = f"https://www.ihavecpu.com/search?q={prod.name.replace(' ', '+')}"
-                elif slug == "banana":
-                    p_url = f"https://www.bnn.in.th/th/p?q={prod.name.replace(' ', '+')}"
-                else:
-                    p_url = f"https://www.advice.co.th/product/search?keyword={prod.name.replace(' ', '+')}"
+                p_url = generate_store_product_url(
+                    store_slug=slug,
+                    product_name=prod.name,
+                    brand=prod.brand,
+                    model_no=prod.model_no,
+                    product_slug=prod.slug
+                )
 
                 listing = PriceListing(
                     product_id=prod.id,
