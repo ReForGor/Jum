@@ -11,12 +11,12 @@
     <div class="max-w-3xl relative z-10">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-800/50 text-cyan-400 text-xs font-semibold mb-4">
             <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-            Thailand IT Hardware Price Intelligence & Alerts
+            <span data-i18n="hero_badge">Thailand IT Hardware Price Intelligence & Alerts</span>
         </div>
         <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white leading-tight mb-4">
-            Compare <span class="bg-gradient-to-r from-cyan-400 via-teal-300 to-blue-500 bg-clip-text text-transparent">IT Equipment Prices</span> Across Thai Stores
+            <span data-i18n="hero_title_prefix">Compare</span> <span class="bg-gradient-to-r from-cyan-400 via-teal-300 to-blue-500 bg-clip-text text-transparent" data-i18n="hero_title_gradient">IT Equipment Prices</span> <span data-i18n="hero_title_suffix">Across Thai Stores</span>
         </h1>
-        <p class="text-gray-400 text-sm md:text-base mb-6 leading-relaxed">
+        <p class="text-gray-400 text-sm md:text-base mb-6 leading-relaxed" data-i18n="hero_desc">
             Real-time price collector and side-by-side comparison engine for GPUs, CPUs, Laptops, SSDs, and Monitors across <strong>JIB, iHaveCPU, BaNANA IT, and Advice</strong>.
         </p>
 
@@ -27,6 +27,7 @@
                 <input 
                     type="text" 
                     id="search-input" 
+                    data-i18n-placeholder="search_placeholder"
                     placeholder="Search GPUs (RTX 5090, 5080, 4070), CPUs (9800X3D), Laptops, SSDs..." 
                     class="w-full bg-[#111827]/90 text-white placeholder-gray-500 pl-11 pr-28 py-3.5 rounded-xl border border-gray-700/80 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 shadow-inner text-sm md:text-base transition-all"
                     oninput="handleSearchInput(this.value)"
@@ -35,7 +36,7 @@
                     <button onclick="clearSearch()" id="clear-search-btn" class="hidden text-gray-400 hover:text-white p-1.5 text-xs">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
-                    <button onclick="applyFilters()" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-md transition-all">
+                    <button onclick="applyFilters()" data-i18n="search_btn" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-md transition-all">
                         Search
                     </button>
                 </div>
@@ -56,7 +57,7 @@
             </div>
             <div>
                 <div class="text-xl font-bold text-white" id="stat-products">{{ prod_count }}</div>
-                <div class="text-[11px] text-gray-400 font-medium">Hardware Tracked</div>
+                <div class="text-[11px] text-gray-400 font-medium" data-i18n="stat_hardware">Hardware Tracked</div>
             </div>
         </div>
         <div class="flex items-center gap-3">
@@ -64,8 +65,8 @@
                 <i class="fa-solid fa-store"></i>
             </div>
             <div>
-                <div class="text-xl font-bold text-white">{{ store_count }} Thai Stores</div>
-                <div class="text-[11px] text-gray-400 font-medium">JIB, iHaveCPU, BaNANA, Advice</div>
+                <div class="text-xl font-bold text-white">{{ store_count }} <span data-i18n="stat_stores">Thai Stores</span></div>
+                <div class="text-[11px] text-gray-400 font-medium" data-i18n="stat_stores_desc">JIB, iHaveCPU, BaNANA, Advice</div>
             </div>
         </div>
         <div class="flex items-center gap-3">
@@ -74,7 +75,7 @@
             </div>
             <div>
                 <div class="text-xl font-bold text-emerald-400" id="stat-listings">{{ listing_count }}</div>
-                <div class="text-[11px] text-gray-400 font-medium">Live Price Listings</div>
+                <div class="text-[11px] text-gray-400 font-medium" data-i18n="stat_listings">Live Price Listings</div>
             </div>
         </div>
         <div class="flex items-center gap-3">
@@ -82,8 +83,8 @@
                 <i class="fa-solid fa-bell"></i>
             </div>
             <div>
-                <div class="text-xl font-bold text-purple-400">Alerts</div>
-                <div class="text-[11px] text-gray-400 font-medium">Price Drop Notifications</div>
+                <div class="text-xl font-bold text-purple-400" data-i18n="stat_alerts">Alerts</div>
+                <div class="text-[11px] text-gray-400 font-medium" data-i18n="stat_alerts_desc">Price Drop Notifications</div>
             </div>
         </div>
     </div>
@@ -94,12 +95,14 @@
 
     <!-- Category Pills Filter Bar -->
     <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
-        <button onclick="setCategory('All')" class="category-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-cyan-600 text-white shadow-md transition-all">
-            All Hardware
+        <button onclick="setCategory('All')" data-category="All" class="category-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-cyan-600 text-white shadow-md transition-all flex items-center gap-1.5">
+            <span data-i18n="cat_all">All Hardware</span>
+            <span class="text-[10px] bg-black/30 px-1.5 py-0.5 rounded font-mono font-bold">{{ prod_count }}</span>
         </button>
         {% for cat in categories %}
-        <button onclick="setCategory('{{ cat }}')" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-gray-800/80 hover:bg-gray-700 text-gray-300 border border-gray-700 hover:text-white transition-all">
-            {{ cat }}
+        <button onclick="setCategory('{{ cat.name }}')" data-category="{{ cat.name }}" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-gray-800/80 hover:bg-gray-700 text-gray-300 border border-gray-700 hover:text-white transition-all flex items-center gap-1.5">
+            <span data-category-name="{{ cat.name }}">{{ cat.name }}</span>
+            <span class="text-[10px] bg-black/40 px-1.5 py-0.5 rounded font-mono text-gray-400 font-bold">{{ cat.count }}</span>
         </button>
         {% endfor %}
     </div>
@@ -110,9 +113,9 @@
         <div class="flex flex-wrap items-center gap-3">
             <!-- Store Filter -->
             <div class="flex items-center gap-1.5">
-                <label class="text-xs text-gray-400 font-medium"><i class="fa-solid fa-store mr-1"></i> Store:</label>
+                <label class="text-xs text-gray-400 font-medium"><i class="fa-solid fa-store mr-1"></i> <span data-i18n="filter_store_label">Store:</span></label>
                 <select id="store-filter" onchange="applyFilters()" class="bg-gray-800 border border-gray-700 text-gray-200 text-xs rounded-lg px-3 py-1.5 focus:ring-1 focus:ring-cyan-500">
-                    <option value="">All Thai Stores</option>
+                    <option value="" data-i18n="filter_all_stores">All Thai Stores</option>
                     <option value="jib">JIB Computer Group</option>
                     <option value="ihavecpu">iHaveCPU</option>
                     <option value="banana">BaNANA IT</option>
@@ -122,25 +125,18 @@
 
             <!-- Price Range -->
             <div class="flex items-center gap-1.5">
-                <label class="text-xs text-gray-400 font-medium"><i class="fa-solid fa-coins mr-1"></i> Max Price (฿):</label>
-                <input type="number" id="max-price-input" placeholder="Any ฿" onchange="applyFilters()" class="w-28 bg-gray-800 border border-gray-700 text-gray-200 text-xs rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-cyan-500">
+                <label class="text-xs text-gray-400 font-medium"><i class="fa-solid fa-coins mr-1"></i> <span data-i18n="filter_max_price_label">Max Price (฿):</span></label>
+                <input type="number" id="max-price-input" data-i18n-placeholder="filter_max_price_placeholder" placeholder="Any ฿" onchange="applyFilters()" class="w-28 bg-gray-800 border border-gray-700 text-gray-200 text-xs rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-cyan-500">
             </div>
 
             <!-- Brand Filter -->
             <div class="flex items-center gap-1.5">
-                <label class="text-xs text-gray-400 font-medium"><i class="fa-solid fa-copyright mr-1"></i> Brand:</label>
+                <label class="text-xs text-gray-400 font-medium"><i class="fa-solid fa-copyright mr-1"></i> <span data-i18n="filter_brand_label">Brand:</span></label>
                 <select id="brand-filter" onchange="applyFilters()" class="bg-gray-800 border border-gray-700 text-gray-200 text-xs rounded-lg px-3 py-1.5 focus:ring-1 focus:ring-cyan-500">
-                    <option value="All">All Brands</option>
-                    <option value="NVIDIA">NVIDIA</option>
-                    <option value="AMD">AMD</option>
-                    <option value="Intel">Intel</option>
-                    <option value="Apple">Apple</option>
-                    <option value="ASUS">ASUS</option>
-                    <option value="Samsung">Samsung</option>
-                    <option value="Crucial">Crucial</option>
-                    <option value="Corsair">Corsair</option>
-                    <option value="LG">LG</option>
-                    <option value="Dell Alienware">Dell Alienware</option>
+                    <option value="All" data-i18n="filter_all_brands">All Brands ({{ prod_count }})</option>
+                    {% for b in brands %}
+                    <option value="{{ b.name }}">{{ b.name }} ({{ b.count }})</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
@@ -149,13 +145,13 @@
         <div class="flex items-center gap-3">
             <span id="results-count" class="text-xs text-gray-400">Loading products...</span>
             <div class="flex items-center gap-1.5">
-                <label class="text-xs text-gray-400 font-medium">Sort By:</label>
+                <label class="text-xs text-gray-400 font-medium" data-i18n="sort_label">Sort By:</label>
                 <select id="sort-select" onchange="applyFilters()" class="bg-gray-800 border border-gray-700 text-gray-200 text-xs rounded-lg px-3 py-1.5 focus:ring-1 focus:ring-cyan-500">
-                    <option value="cheapest" selected>Lowest Price First</option>
-                    <option value="discount">Biggest Discount %</option>
-                    <option value="expensive">Highest Price First</option>
-                    <option value="name">Product Name (A-Z)</option>
-                    <option value="newest">Newest Added</option>
+                    <option value="cheapest" data-i18n="sort_cheapest" selected>Lowest Price First</option>
+                    <option value="discount" data-i18n="sort_discount">Biggest Discount %</option>
+                    <option value="expensive" data-i18n="sort_expensive">Highest Price First</option>
+                    <option value="name" data-i18n="sort_name">Product Name (A-Z)</option>
+                    <option value="newest" data-i18n="sort_newest">Newest Added</option>
                 </select>
             </div>
         </div>
@@ -171,9 +167,9 @@
         <div class="w-16 h-16 mx-auto rounded-full bg-gray-800 flex items-center justify-center text-gray-500 text-2xl mb-4">
             <i class="fa-solid fa-box-open"></i>
         </div>
-        <h3 class="text-lg font-semibold text-gray-200 mb-1">No IT Equipment Found</h3>
-        <p class="text-sm text-gray-400 mb-4">Try adjusting your search terms or filters.</p>
-        <button onclick="resetAllFilters()" class="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold transition-colors">
+        <h3 class="text-lg font-semibold text-gray-200 mb-1" data-i18n="no_items_found">No IT Equipment Found</h3>
+        <p class="text-sm text-gray-400 mb-4" data-i18n="no_items_desc">Try adjusting your search terms or filters.</p>
+        <button onclick="resetAllFilters()" data-i18n="reset_filters" class="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold transition-colors">
             Reset All Filters
         </button>
     </div>
@@ -186,7 +182,9 @@
         <!-- Modal Header -->
         <div class="p-5 sm:p-6 border-b border-gray-800 flex items-start justify-between bg-gradient-to-r from-gray-900 to-[#111c33]">
             <div class="flex items-center gap-4">
-                <img id="modal-product-img" src="" alt="" class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl border border-gray-700 bg-gray-800 shadow-md">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl border border-gray-700 bg-gray-900 shadow-md flex items-center justify-center p-2 shrink-0">
+                    <img id="modal-product-img" src="" alt="" class="max-w-full max-h-full object-contain drop-shadow-md">
+                </div>
                 <div>
                     <div class="flex items-center gap-2 mb-1">
                         <span id="modal-product-brand" class="px-2 py-0.5 rounded bg-gray-800 border border-gray-700 text-[10px] font-semibold text-gray-300 uppercase"></span>
@@ -214,21 +212,21 @@
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="text-sm font-bold uppercase tracking-wider text-gray-300 flex items-center gap-2">
                         <i class="fa-solid fa-store text-cyan-400"></i>
-                        Thai Retailer Price Comparison
+                        <span data-i18n="modal_title">Thai Retailer Price Comparison</span>
                     </h3>
-                    <span class="text-xs text-gray-400">Sorted from lowest to highest</span>
+                    <span class="text-xs text-gray-400" data-i18n="modal_sorted">Sorted from lowest to highest</span>
                 </div>
                 
                 <div class="overflow-x-auto rounded-xl border border-gray-800 bg-[#0b101e]">
                     <table class="w-full text-left text-xs sm:text-sm">
                         <thead class="bg-gray-900/90 text-gray-400 uppercase text-[11px] font-semibold border-b border-gray-800">
                             <tr>
-                                <th class="py-3 px-4">Platform Store</th>
-                                <th class="py-3 px-4">Stock Status</th>
-                                <th class="py-3 px-4">Price</th>
-                                <th class="py-3 px-4">Shipping</th>
-                                <th class="py-3 px-4">Total & Diff</th>
-                                <th class="py-3 px-4 text-right">Action</th>
+                                <th class="py-3 px-4" data-i18n="modal_th_store">Platform Store</th>
+                                <th class="py-3 px-4" data-i18n="modal_th_stock">Stock Status</th>
+                                <th class="py-3 px-4" data-i18n="modal_th_price">Price</th>
+                                <th class="py-3 px-4" data-i18n="modal_th_shipping">Shipping</th>
+                                <th class="py-3 px-4" data-i18n="modal_th_total">Total & Diff</th>
+                                <th class="py-3 px-4 text-right" data-i18n="modal_th_action">Action</th>
                             </tr>
                         </thead>
                         <tbody id="modal-platforms-tbody" class="divide-y divide-gray-800/60 font-medium">
@@ -243,13 +241,13 @@
                 <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-chart-line text-purple-400"></i>
-                        <h3 class="text-sm font-bold text-gray-200 uppercase tracking-wider">30-Day Store Price Trend</h3>
+                        <h3 class="text-sm font-bold text-gray-200 uppercase tracking-wider" data-i18n="modal_history_title">30-Day Store Price Trend</h3>
                     </div>
                     <!-- Range Selector -->
                     <div class="flex items-center gap-1 bg-gray-900 p-1 rounded-lg border border-gray-800 text-xs">
-                        <button onclick="loadProductHistory(currentModalProductId, 7)" class="chart-range-btn px-2.5 py-1 rounded text-gray-400 hover:text-white" data-days="7">7 Days</button>
-                        <button onclick="loadProductHistory(currentModalProductId, 30)" class="chart-range-btn active px-2.5 py-1 rounded bg-cyan-600 text-white font-semibold" data-days="30">30 Days</button>
-                        <button onclick="loadProductHistory(currentModalProductId, 90)" class="chart-range-btn px-2.5 py-1 rounded text-gray-400 hover:text-white" data-days="90">90 Days</button>
+                        <button onclick="loadProductHistory(currentModalProductId, 7)" class="chart-range-btn px-2.5 py-1 rounded text-gray-400 hover:text-white" data-days="7" data-i18n="modal_days_7">7 Days</button>
+                        <button onclick="loadProductHistory(currentModalProductId, 30)" class="chart-range-btn active px-2.5 py-1 rounded bg-cyan-600 text-white font-semibold" data-days="30" data-i18n="modal_days_30">30 Days</button>
+                        <button onclick="loadProductHistory(currentModalProductId, 90)" class="chart-range-btn px-2.5 py-1 rounded text-gray-400 hover:text-white" data-days="90" data-i18n="modal_days_90">90 Days</button>
                     </div>
                 </div>
 
@@ -260,15 +258,15 @@
 
                 <div class="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-gray-800/80 text-center text-xs">
                     <div>
-                        <span class="text-gray-500 block text-[11px]">All-Time Lowest</span>
+                        <span class="text-gray-500 block text-[11px]" data-i18n="modal_hist_lowest">All-Time Lowest</span>
                         <span id="stat-hist-lowest" class="text-emerald-400 font-bold">฿0.00</span>
                     </div>
                     <div>
-                        <span class="text-gray-500 block text-[11px]">All-Time Highest</span>
+                        <span class="text-gray-500 block text-[11px]" data-i18n="modal_hist_highest">All-Time Highest</span>
                         <span id="stat-hist-highest" class="text-red-400 font-bold">฿0.00</span>
                     </div>
                     <div>
-                        <span class="text-gray-500 block text-[11px]">Current Lowest</span>
+                        <span class="text-gray-500 block text-[11px]" data-i18n="modal_hist_current">Current Lowest</span>
                         <span id="stat-hist-current" class="text-cyan-400 font-bold">฿0.00</span>
                     </div>
                 </div>
@@ -278,7 +276,7 @@
             <div>
                 <h3 class="text-sm font-bold uppercase tracking-wider text-gray-300 mb-3 flex items-center gap-2">
                     <i class="fa-solid fa-list-check text-blue-400"></i>
-                    Key Hardware Specifications
+                    <span data-i18n="modal_specs_title">Key Hardware Specifications</span>
                 </h3>
                 <div id="modal-specs-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                     <!-- Populated dynamically -->
@@ -289,18 +287,18 @@
             <div class="rounded-xl bg-gradient-to-r from-cyan-950/40 via-blue-950/30 to-purple-950/30 border border-cyan-800/40 p-4 sm:p-5">
                 <div class="flex items-center gap-2 mb-2">
                     <i class="fa-solid fa-bell text-amber-400 text-sm"></i>
-                    <h4 class="text-sm font-bold text-white">Set Instant Price Drop Alert</h4>
+                    <h4 class="text-sm font-bold text-white" data-i18n="modal_alert_title">Set Instant Price Drop Alert</h4>
                 </div>
-                <p class="text-xs text-gray-400 mb-3">
+                <p class="text-xs text-gray-400 mb-3" data-i18n="modal_alert_desc">
                     We continuously monitor JIB, iHaveCPU, BaNANA, and Advice. Receive an instant in-app notification & alert when price drops below your target.
                 </p>
                 <form id="alert-form" onsubmit="handleCreateAlert(event)" class="flex flex-wrap sm:flex-nowrap items-center gap-2">
-                    <input type="email" id="alert-email" placeholder="Enter your email (optional if logged in)" class="flex-1 bg-gray-900 border border-gray-700 text-xs text-white rounded-lg px-3 py-2.5 focus:ring-1 focus:ring-cyan-500">
+                    <input type="email" id="alert-email" data-i18n-placeholder="modal_alert_email_placeholder" placeholder="Enter your email (optional if logged in)" class="flex-1 bg-gray-900 border border-gray-700 text-xs text-white rounded-lg px-3 py-2.5 focus:ring-1 focus:ring-cyan-500">
                     <div class="relative w-36">
                         <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs font-bold">฿</span>
-                        <input type="number" step="10" id="alert-price" required placeholder="Target ฿" class="w-full bg-gray-900 border border-gray-700 text-xs text-white font-bold rounded-lg pl-6 pr-2 py-2.5 focus:ring-1 focus:ring-cyan-500">
+                        <input type="number" step="10" id="alert-price" required data-i18n-placeholder="modal_alert_price_placeholder" placeholder="Target ฿" class="w-full bg-gray-900 border border-gray-700 text-xs text-white font-bold rounded-lg pl-6 pr-2 py-2.5 focus:ring-1 focus:ring-cyan-500">
                     </div>
-                    <button type="submit" class="w-full sm:w-auto bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs px-4 py-2.5 rounded-lg transition-colors whitespace-nowrap shadow">
+                    <button type="submit" data-i18n="modal_alert_btn" class="w-full sm:w-auto bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs px-4 py-2.5 rounded-lg transition-colors whitespace-nowrap shadow">
                         Track Target
                     </button>
                 </form>
@@ -311,9 +309,9 @@
         <!-- Modal Footer -->
         <div class="p-4 bg-gray-900 border-t border-gray-800 flex items-center justify-between text-xs text-gray-400">
             <span class="flex items-center gap-1.5">
-                <i class="fa-solid fa-shield-halved text-cyan-400"></i> Thai official retailer warranties guaranteed
+                <i class="fa-solid fa-shield-halved text-cyan-400"></i> <span data-i18n="modal_warranty_guarantee">Thai official retailer warranties guaranteed</span>
             </span>
-            <button onclick="closeModal()" class="px-4 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold transition-colors">
+            <button onclick="closeModal()" data-i18n="modal_close" class="px-4 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold transition-colors">
                 Close
             </button>
         </div>

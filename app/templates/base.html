@@ -74,36 +74,48 @@
                 <!-- Center Nav Links -->
                 <nav class="hidden lg:flex items-center space-x-1">
                     <a href="/" class="px-3 py-2 rounded-lg text-xs font-semibold transition-colors {% if request.url.path == '/' %}text-cyan-400 bg-cyan-950/50 border border-cyan-800/60{% else %}text-gray-300 hover:text-white hover:bg-gray-800/50{% endif %}">
-                        <i class="fa-solid fa-layer-group mr-1.5 text-xs"></i> Catalog & Prices
+                        <i class="fa-solid fa-layer-group mr-1.5 text-xs"></i> <span data-i18n="nav_catalog">Catalog & Prices</span>
                     </a>
                     <a href="/compare" class="px-3 py-2 rounded-lg text-xs font-semibold transition-colors {% if request.url.path == '/compare' %}text-cyan-400 bg-cyan-950/50 border border-cyan-800/60{% else %}text-gray-300 hover:text-white hover:bg-gray-800/50{% endif %}">
-                        <i class="fa-solid fa-scale-balanced mr-1.5 text-xs"></i> Head-to-Head
+                        <i class="fa-solid fa-scale-balanced mr-1.5 text-xs"></i> <span data-i18n="nav_compare">Head-to-Head</span>
                     </a>
                     <a href="/deals" class="px-3 py-2 rounded-lg text-xs font-semibold transition-colors {% if request.url.path == '/deals' %}text-cyan-400 bg-cyan-950/50 border border-cyan-800/60{% else %}text-gray-300 hover:text-white hover:bg-gray-800/50{% endif %}">
-                        <i class="fa-solid fa-bolt mr-1.5 text-amber-400 text-xs"></i> Hot Deals
+                        <i class="fa-solid fa-bolt mr-1.5 text-amber-400 text-xs"></i> <span data-i18n="nav_deals">Hot Deals</span>
                     </a>
                     <a href="/watchlist" class="px-3 py-2 rounded-lg text-xs font-semibold transition-colors {% if request.url.path == '/watchlist' %}text-cyan-400 bg-cyan-950/50 border border-cyan-800/60{% else %}text-gray-300 hover:text-white hover:bg-gray-800/50{% endif %}">
-                        <i class="fa-solid fa-bell mr-1.5 text-cyan-400 text-xs"></i> Watchlist
+                        <i class="fa-solid fa-bell mr-1.5 text-cyan-400 text-xs"></i> <span data-i18n="nav_watchlist">Watchlist</span>
                     </a>
                     <a href="/platforms" class="px-3 py-2 rounded-lg text-xs font-semibold transition-colors {% if request.url.path == '/platforms' %}text-cyan-400 bg-cyan-950/50 border border-cyan-800/60{% else %}text-gray-300 hover:text-white hover:bg-gray-800/50{% endif %}">
-                        <i class="fa-solid fa-server mr-1.5 text-emerald-400 text-xs"></i> Scrapers
+                        <i class="fa-solid fa-server mr-1.5 text-emerald-400 text-xs"></i> <span data-i18n="nav_scrapers">Scrapers</span>
                     </a>
                     <a href="/api-explorer" class="px-3 py-2 rounded-lg text-xs font-semibold transition-colors {% if request.url.path == '/api-explorer' %}text-cyan-400 bg-cyan-950/50 border border-cyan-800/60{% else %}text-gray-300 hover:text-white hover:bg-gray-800/50{% endif %}">
-                        <i class="fa-solid fa-code mr-1.5 text-purple-400 text-xs"></i> REST API
+                        <i class="fa-solid fa-code mr-1.5 text-purple-400 text-xs"></i> <span data-i18n="nav_api">REST API</span>
                     </a>
                 </nav>
 
-                <!-- Right Actions: Notifications, Currency, Auth -->
-                <div class="flex items-center gap-2.5">
+                <!-- Right Actions: Language, Currency, Scrapers, Notifications, Auth -->
+                <div class="flex items-center gap-2">
                     
+                    <!-- Language Switcher Button (TH / EN) -->
+                    <div class="flex items-center rounded-lg bg-gray-800/90 border border-gray-700 p-0.5 text-xs font-bold shrink-0">
+                        <button id="lang-btn-th" onclick="setLanguage('th')" class="px-2 py-1 rounded-md transition-all text-white bg-cyan-600 shadow-sm flex items-center gap-1 font-bold text-xs" title="ภาษาไทย">
+                            <span>🇹🇭</span>
+                            <span>TH</span>
+                        </button>
+                        <button id="lang-btn-en" onclick="setLanguage('en')" class="px-2 py-1 rounded-md transition-all text-gray-400 hover:text-white flex items-center gap-1 font-medium text-xs" title="English">
+                            <span>🇺🇸</span>
+                            <span>EN</span>
+                        </button>
+                    </div>
+
                     <!-- Global Refresh Scrapers Button -->
                     <button id="global-scrape-btn" onclick="triggerGlobalScrape()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 hover:border-cyan-500/50 transition-all shadow-sm">
                         <i class="fa-solid fa-arrows-rotate text-cyan-400"></i>
-                        <span>Refresh Prices</span>
+                        <span data-i18n="btn_refresh_prices">Refresh Prices</span>
                     </button>
 
                     <!-- Currency Switcher (Default: THB ฿) -->
-                    <select id="currency-select" onchange="changeCurrency(this.value)" class="bg-gray-800 border border-gray-700 text-gray-200 text-xs font-bold rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-500">
+                    <select id="currency-select" onchange="changeCurrency(this.value)" class="bg-gray-800 border border-gray-700 text-gray-200 text-xs font-bold rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-500">
                         <option value="THB" selected>THB (฿)</option>
                         <option value="USD">USD ($)</option>
                         <option value="EUR">EUR (€)</option>
@@ -126,9 +138,9 @@
                             <div class="p-3 bg-gray-900 flex items-center justify-between">
                                 <div class="flex items-center gap-2">
                                     <i class="fa-solid fa-bell text-amber-400 text-xs"></i>
-                                    <span class="text-xs font-bold text-white uppercase tracking-wider">Price Drop Alerts</span>
+                                    <span class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="notif_header">Price Drop Alerts</span>
                                 </div>
-                                <button onclick="markAllNotificationsRead()" class="text-[11px] text-cyan-400 hover:text-cyan-300 font-semibold">
+                                <button onclick="markAllNotificationsRead()" class="text-[11px] text-cyan-400 hover:text-cyan-300 font-semibold" data-i18n="notif_mark_read">
                                     Mark All Read
                                 </button>
                             </div>
@@ -137,7 +149,7 @@
                             </div>
                             <div class="p-2.5 bg-gray-900 text-center">
                                 <a href="/watchlist" class="text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center justify-center gap-1">
-                                    <span>Manage All Alerts & Watchlist</span>
+                                    <span data-i18n="notif_manage_watchlist">Manage All Alerts & Watchlist</span>
                                     <i class="fa-solid fa-chevron-right text-[10px]"></i>
                                 </a>
                             </div>
@@ -166,13 +178,13 @@
                                     <div class="text-[10px] text-gray-400" id="dropdown-email">email</div>
                                 </div>
                                 <a href="/watchlist" class="block p-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800">
-                                    <i class="fa-solid fa-bell mr-1.5 text-cyan-400"></i> My Watchlist & Alerts
+                                    <i class="fa-solid fa-bell mr-1.5 text-cyan-400"></i> <span data-i18n="my_watchlist">My Watchlist & Alerts</span>
                                 </a>
                                 <a href="/admin" id="nav-admin-link" class="hidden p-2 rounded-lg text-purple-300 hover:text-white hover:bg-purple-950/60 font-semibold flex items-center gap-1.5">
-                                    <i class="fa-solid fa-shield-halved text-purple-400"></i> Admin Portal
+                                    <i class="fa-solid fa-shield-halved text-purple-400"></i> <span data-i18n="admin_portal">Admin Portal</span>
                                 </a>
                                 <button onclick="handleLogout()" class="w-full text-left p-2 rounded-lg text-red-400 hover:bg-red-950/40">
-                                    <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Logout
+                                    <i class="fa-solid fa-right-from-bracket mr-1.5"></i> <span data-i18n="sign_out">Sign Out</span>
                                 </button>
                             </div>
                         </div>
@@ -181,7 +193,7 @@
                         <div id="user-guest-box">
                             <button onclick="openAuthModal('login')" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5">
                                 <i class="fa-solid fa-right-to-bracket text-[11px]"></i>
-                                <span>Sign In</span>
+                                <span data-i18n="sign_in">Sign In</span>
                             </button>
                         </div>
                     </div>
@@ -195,13 +207,13 @@
 
             <!-- Mobile Menu Dropdown -->
             <div id="mobile-menu" class="hidden lg:hidden pb-4 pt-2 border-t border-gray-800 space-y-1 text-xs font-semibold">
-                <a href="/" class="block px-3 py-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800">Catalog & Prices</a>
-                <a href="/compare" class="block px-3 py-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800">Head-to-Head Comparison</a>
-                <a href="/deals" class="block px-3 py-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800">Hot Deals</a>
-                <a href="/watchlist" class="block px-3 py-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800">My Watchlist & Alerts</a>
-                <a href="/platforms" class="block px-3 py-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800">Thai Scrapers (JIB, iHaveCPU, BaNANA, Advice)</a>
-                <a href="/api-explorer" class="block px-3 py-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800">REST API Explorer</a>
-                <a href="/docs" target="_blank" class="block px-3 py-2 rounded-md text-cyan-400 hover:bg-gray-800">Swagger API Docs</a>
+                <a href="/" class="block px-3 py-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800" data-i18n="mobile_catalog">Catalog & Prices</a>
+                <a href="/compare" class="block px-3 py-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800" data-i18n="mobile_compare">Head-to-Head Comparison</a>
+                <a href="/deals" class="block px-3 py-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800" data-i18n="mobile_deals">Hot Deals</a>
+                <a href="/watchlist" class="block px-3 py-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800" data-i18n="mobile_watchlist">My Watchlist & Alerts</a>
+                <a href="/platforms" class="block px-3 py-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800" data-i18n="mobile_scrapers">Thai Scrapers (JIB, iHaveCPU, BaNANA, Advice)</a>
+                <a href="/api-explorer" class="block px-3 py-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800" data-i18n="mobile_api">REST API Explorer</a>
+                <a href="/docs" target="_blank" class="block px-3 py-2 rounded-md text-cyan-400 hover:bg-gray-800" data-i18n="mobile_docs">Swagger API Docs</a>
             </div>
         </div>
     </header>
@@ -281,19 +293,20 @@
                 <div class="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs">
                     <i class="fa-solid fa-microchip"></i>
                 </div>
-                <span class="text-gray-300 font-semibold">TechPrice Thailand</span>
-                <span class="text-xs text-gray-500">• JIB, iHaveCPU, BaNANA, Advice IT Aggregator</span>
+                <span class="text-gray-300 font-semibold" data-i18n="footer_title">TechPrice Thailand</span>
+                <span class="text-xs text-gray-500" data-i18n="footer_desc">• JIB, iHaveCPU, BaNANA, Advice IT Aggregator</span>
             </div>
             <div class="flex items-center gap-6 text-xs text-gray-400">
-                <a href="/api/export/csv" class="hover:text-cyan-400 transition-colors"><i class="fa-solid fa-file-csv mr-1"></i> Export CSV</a>
-                <a href="/api/products" class="hover:text-cyan-400 transition-colors"><i class="fa-solid fa-code mr-1"></i> JSON API</a>
-                <a href="/docs" target="_blank" class="hover:text-cyan-400 transition-colors"><i class="fa-solid fa-book mr-1"></i> OpenAPI Spec</a>
-                <span>© 2026 TechPrice Platform</span>
+                <a href="/api/export/csv" class="hover:text-cyan-400 transition-colors"><i class="fa-solid fa-file-csv mr-1"></i> <span data-i18n="footer_export">Export CSV</span></a>
+                <a href="/api/products" class="hover:text-cyan-400 transition-colors"><i class="fa-solid fa-code mr-1"></i> <span data-i18n="footer_json">JSON API</span></a>
+                <a href="/docs" target="_blank" class="hover:text-cyan-400 transition-colors"><i class="fa-solid fa-book mr-1"></i> <span data-i18n="footer_openapi">OpenAPI Spec</span></a>
+                <span data-i18n="footer_copyright">© 2026 TechPrice Platform</span>
             </div>
         </div>
     </footer>
 
     <!-- Scripts -->
+    <script src="/static/js/i18n.js"></script>
     <script src="/static/js/app.js"></script>
     {% block extra_scripts %}{% endblock %}
 </body>

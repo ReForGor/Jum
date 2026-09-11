@@ -155,9 +155,13 @@ async def collect_and_sync_all():
             if slug in existing_slugs:
                 continue
 
-            brand = detect_brand(raw_title)
-            category = detect_category(raw_title)
-            img_url = item.get('link') or "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=600"
+            raw_img = item.get('link') or ''
+            if '/product/icon/' in raw_img:
+                img_url = raw_img.replace('/product/icon/', '/product/original/')
+            elif raw_img:
+                img_url = raw_img
+            else:
+                img_url = "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=85"
             msrp = round(sale_price * 1.05 / 10) * 10
 
             prod = Product(

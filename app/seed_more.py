@@ -36,7 +36,7 @@ MORE_PRODUCTS = [
         "category": "Graphics Cards (GPU)",
         "brand": "NVIDIA",
         "model_no": "RTX-4080S-16G",
-        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=85",
         "description": "High-end 4K gaming powerhouse with 10,240 CUDA cores, 16GB GDDR6X, and supercharged ray tracing cores.",
         "msrp": 38900.0,
         "specs": {
@@ -55,7 +55,7 @@ MORE_PRODUCTS = [
         "category": "Graphics Cards (GPU)",
         "brand": "NVIDIA",
         "model_no": "RTX-4070S-12G",
-        "image_url": "https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=1200&q=85",
         "description": "Sweet-spot 1440p high refresh GPU with 7168 CUDA cores, 12GB GDDR6X, and DLSS 3 frame generation.",
         "msrp": 23900.0,
         "specs": {
@@ -74,7 +74,7 @@ MORE_PRODUCTS = [
         "category": "Graphics Cards (GPU)",
         "brand": "NVIDIA",
         "model_no": "RTX-4060TI-16G",
-        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=85",
         "description": "High VRAM 1080p/1440p gaming and AI generation GPU with 16GB GDDR6 and low 165W power consumption.",
         "msrp": 17900.0,
         "specs": {
@@ -93,7 +93,7 @@ MORE_PRODUCTS = [
         "category": "Graphics Cards (GPU)",
         "brand": "AMD",
         "model_no": "RX-7800XT-16G",
-        "image_url": "https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=1200&q=85",
         "description": "RDNA 3 gaming champion with 16GB VRAM, 256-bit bus width, 64MB Infinity Cache, and AMD HYPR-RX.",
         "msrp": 19500.0,
         "specs": {
@@ -112,7 +112,7 @@ MORE_PRODUCTS = [
         "category": "Graphics Cards (GPU)",
         "brand": "AMD",
         "model_no": "RX-7700XT-12G",
-        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=85",
         "description": "1440p gaming graphics card with 12GB GDDR6, 54 Compute Units, and DisplayPort 2.1 support.",
         "msrp": 15900.0,
         "specs": {
@@ -133,7 +133,7 @@ MORE_PRODUCTS = [
         "category": "Processors (CPU)",
         "brand": "AMD",
         "model_no": "100-100000910WOF",
-        "image_url": "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=1200&q=85",
         "description": "Legendary gaming CPU with 96MB of 3D V-Cache, 8 cores, 16 threads, and incredible power efficiency.",
         "msrp": 14900.0,
         "specs": {
@@ -152,7 +152,7 @@ MORE_PRODUCTS = [
         "category": "Processors (CPU)",
         "brand": "AMD",
         "model_no": "100-100001405WOF",
-        "image_url": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=1200&q=85",
         "description": "Zen 5 desktop CPU offering high single-core gaming performance, 5.4GHz boost, and low 65W TDP.",
         "msrp": 10900.0,
         "specs": {
@@ -171,7 +171,7 @@ MORE_PRODUCTS = [
         "category": "Processors (CPU)",
         "brand": "Intel",
         "model_no": "BX8071514900K",
-        "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=85",
         "description": "Raptor Lake Refresh flagship capable of up to 6.0 GHz Intel Thermal Velocity Boost, 8P+16E cores.",
         "msrp": 21900.0,
         "specs": {
@@ -190,7 +190,7 @@ MORE_PRODUCTS = [
         "category": "Processors (CPU)",
         "brand": "Intel",
         "model_no": "BX8071514700K",
-        "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=85",
         "description": "20 cores (8P + 12E), 5.6 GHz max turbo frequency, perfect for demanding gamers and streamers.",
         "msrp": 15900.0,
         "specs": {
@@ -209,7 +209,7 @@ MORE_PRODUCTS = [
         "category": "Processors (CPU)",
         "brand": "Intel",
         "model_no": "BX8071514600K",
-        "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=85",
         "description": "The best value mid-range processor with 14 cores (6P + 8E), 5.3 GHz boost, and DDR5/DDR4 support.",
         "msrp": 11500.0,
         "specs": {
@@ -230,7 +230,7 @@ MORE_PRODUCTS = [
         "category": "Motherboards",
         "brand": "ASUS",
         "model_no": "ROG-Z890-HERO",
-        "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=85",
         "description": "Flagship Intel LGA 1851 motherboard with 22+1+2+2 power stages, DDR5 NitroPath, Thunderbolt 4, and WiFi 7.",
         "msrp": 26900.0,
         "specs": {
@@ -249,7 +249,7 @@ MORE_PRODUCTS = [
         "category": "Motherboards",
         "brand": "MSI",
         "model_no": "MAG-B650-TOMAHAWK-WIFI",
-        "image_url": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=1200&q=85",
         "description": "Extremely popular AMD AM5 gaming motherboard with robust 14+2+1 Duet Rail VRM and dual PCIe 4.0 M.2.",
         "msrp": 7990.0,
         "specs": {
@@ -268,7 +268,7 @@ MORE_PRODUCTS = [
         "category": "Motherboards",
         "brand": "GIGABYTE",
         "model_no": "X870-AORUS-ELITE-WIFI7",
-        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=85",
         "description": "Next-gen AMD AM5 motherboard featuring native USB4 40Gbps, PCIe 5.0 GPU & M.2, and Wi-Fi 7 with EZ-Latch.",
         "msrp": 11900.0,
         "specs": {
@@ -289,7 +289,7 @@ MORE_PRODUCTS = [
         "category": "Laptops & Notebooks",
         "brand": "Lenovo",
         "model_no": "16IRX9H",
-        "image_url": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=1200&q=85",
         "description": "Elite gaming laptop with 16\" WQXGA 240Hz 500 nits display, 175W TGP RTX 4080, and Coldfront Vapor Chamber.",
         "msrp": 89900.0,
         "specs": {
@@ -308,7 +308,7 @@ MORE_PRODUCTS = [
         "category": "Laptops & Notebooks",
         "brand": "Acer",
         "model_no": "PH16-72-747X",
-        "image_url": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1200&q=85",
         "description": "High refresh 16\" WQXGA 240Hz screen, 5th Gen AeroBlade 3D fans, and full-power RTX 4070 140W GPU.",
         "msrp": 59900.0,
         "specs": {
@@ -326,7 +326,7 @@ MORE_PRODUCTS = [
         "category": "Laptops & Notebooks",
         "brand": "Apple",
         "model_no": "MXD13TH/A",
-        "image_url": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=85",
         "description": "Ultra-thin 11.5mm aluminum chassis, 15.3\" Liquid Retina display, silent fanless M3 chip, and 18-hour battery.",
         "msrp": 54900.0,
         "specs": {
@@ -346,7 +346,7 @@ MORE_PRODUCTS = [
         "category": "Storage (SSD & HDD)",
         "brand": "Western Digital",
         "model_no": "WDS200T2X0E",
-        "image_url": "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1200&q=85",
         "description": "Blistering PCIe Gen4 speeds up to 7,300 MB/s read, Game Mode 2.0, optimized for PC and PS5 storage.",
         "msrp": 6290.0,
         "specs": {
@@ -365,7 +365,7 @@ MORE_PRODUCTS = [
         "category": "Storage (SSD & HDD)",
         "brand": "Kingston",
         "model_no": "SKC3000D/2048G",
-        "image_url": "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1200&q=85",
         "description": "Phison E18 controller, graphene aluminum heat spreader, 7000MB/s speeds, and premium 1600 TBW endurance.",
         "msrp": 5490.0,
         "specs": {
@@ -386,7 +386,7 @@ MORE_PRODUCTS = [
         "category": "Memory (RAM)",
         "brand": "G.SKILL",
         "model_no": "F5-6400J3239G16GX2-TZ5RK",
-        "image_url": "https://images.unsplash.com/photo-1562976540-1502c2145186?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1562976540-1502c2145186?auto=format&fit=crop&w=1200&q=85",
         "description": "Hyper-speed DDR5 memory module with sleek brushed-aluminum heatspreader and smooth RGB light bar.",
         "msrp": 4890.0,
         "specs": {
@@ -404,7 +404,7 @@ MORE_PRODUCTS = [
         "category": "Memory (RAM)",
         "brand": "Kingston",
         "model_no": "KF560C30BBEAK2-32",
-        "image_url": "https://images.unsplash.com/photo-1562976540-1502c2145186?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1562976540-1502c2145186?auto=format&fit=crop&w=1200&q=85",
         "description": "AMD EXPO certified DDR5 memory kit with tight CL30 timings for maximum Ryzen 7000/9000 gaming FPS.",
         "msrp": 4290.0,
         "specs": {
@@ -423,7 +423,7 @@ MORE_PRODUCTS = [
         "category": "Monitors & Displays",
         "brand": "ASUS",
         "model_no": "PG32UCDM",
-        "image_url": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1200&q=85",
         "description": "Third-generation 4K QD-OLED panel, 240Hz refresh, 0.03ms response, graphene film heatsink, and USB-C 90W PD.",
         "msrp": 46900.0,
         "specs": {
@@ -441,7 +441,7 @@ MORE_PRODUCTS = [
         "category": "Monitors & Displays",
         "brand": "Samsung",
         "model_no": "LS49CG954SEXXT",
-        "image_url": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1200&q=85",
         "description": "Colossal 49\" 32:9 super ultrawide Dual QHD OLED panel with 1800R curvature, Neo Quantum Processor Pro.",
         "msrp": 49900.0,
         "specs": {
@@ -461,7 +461,7 @@ MORE_PRODUCTS = [
         "category": "PC Cases & Cooling",
         "brand": "NZXT",
         "model_no": "RL-KR36E-B1",
-        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=85",
         "description": "High-performance liquid cooling with 2.36\" wide-angle 640x640 LCD display for custom GIFs and system telemetry.",
         "msrp": 10500.0,
         "specs": {
@@ -479,7 +479,7 @@ MORE_PRODUCTS = [
         "category": "PC Cases & Cooling",
         "brand": "Lian Li",
         "model_no": "O11DERGBX",
-        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=85",
         "description": "Iconic dual-chamber showcase chassis with removable front pillar for panoramic glass view and ARGB diffuser strips.",
         "msrp": 5590.0,
         "specs": {
@@ -499,7 +499,7 @@ MORE_PRODUCTS = [
         "category": "Gaming Peripherals",
         "brand": "Logitech",
         "model_no": "910-006631",
-        "image_url": "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1200&q=85",
         "description": "Pro esports icon weighing only 60g with HERO 2 sensor (32,000 DPI), LIGHTFORCE hybrid switches, and 4K polling.",
         "msrp": 5490.0,
         "specs": {
@@ -518,7 +518,7 @@ MORE_PRODUCTS = [
         "category": "Gaming Peripherals",
         "brand": "Razer",
         "model_no": "RZ01-05120100-R3A1",
-        "image_url": "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1200&q=85",
         "description": "54g ultra-lightweight esports mouse with Focus Pro 35K Gen-2 Optical Sensor and true 8000Hz wireless polling.",
         "msrp": 5690.0,
         "specs": {
@@ -536,7 +536,7 @@ MORE_PRODUCTS = [
         "category": "Gaming Peripherals",
         "brand": "Wooting",
         "model_no": "WK3-US1-G01-B01",
-        "image_url": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1200&q=85",
         "description": "Hall Effect magnetic switches with 0.1mm - 4.0mm adjustable actuation, Rapid Trigger, and 0.1ms latency.",
         "msrp": 6990.0,
         "specs": {

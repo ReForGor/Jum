@@ -292,7 +292,7 @@ async function loadProducts() {
     `).join('');
 
     try {
-        let url = `/api/products?sort_by=${currentSort}&limit=60`;
+        let url = `/api/products?sort_by=${currentSort}&limit=1000`;
         if (currentCategory && currentCategory !== 'All') url += `&category=${encodeURIComponent(currentCategory)}`;
         if (currentSearch) url += `&q=${encodeURIComponent(currentSearch)}`;
         if (currentStore) url += `&store_slug=${encodeURIComponent(currentStore)}`;
@@ -301,9 +301,10 @@ async function loadProducts() {
 
         const res = await fetch(url);
         const products = await res.json();
+        const totalCount = res.headers.get('X-Total-Count') || products.length;
 
         if (resultsCount) {
-            resultsCount.textContent = `Showing ${products.length} IT items`;
+            resultsCount.textContent = t('showing_items', { count: products.length });
         }
 
         if (products.length === 0) {
@@ -318,7 +319,7 @@ async function loadProducts() {
 
     } catch (err) {
         console.error('Error loading products:', err);
-        grid.innerHTML = `<div class="col-span-full text-center text-red-400 py-12">Failed to load IT products.</div>`;
+        grid.innerHTML = `<div class="col-span-full text-center text-red-400 py-12">${t('failed_load_products')}</div>`;
     }
 }
 
@@ -327,21 +328,22 @@ function renderProductCard(p) {
     const msrp = p.msrp ? formatCurrency(p.msrp) : null;
     const hasDiscount = p.max_discount_percent > 0;
     const savingsAmount = p.msrp && p.lowest_price && p.msrp > p.lowest_price ? formatCurrency(p.msrp - p.lowest_price) : null;
+    const categoryName = t(p.category) || p.category;
 
     return `
     <div class="bg-[#111827] border border-gray-800 hover:border-cyan-500/50 rounded-2xl p-5 flex flex-col justify-between shadow-xl transition-all hover:shadow-cyan-900/10 group">
         <div>
             <!-- Image & Badges -->
-            <div class="relative mb-4 overflow-hidden rounded-xl bg-gray-900 h-44 flex items-center justify-center border border-gray-800">
+            <div class="relative mb-4 overflow-hidden rounded-xl bg-gray-950/80 h-48 flex items-center justify-center border border-gray-800 p-3">
                 <img 
-                    src="${p.image_url || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=400'}" 
+                    src="${p.image_url || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=85'}" 
                     alt="${p.name}" 
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-md"
                     loading="lazy"
                 >
                 <!-- Category Badge -->
                 <div class="absolute top-2 left-2 bg-black/75 backdrop-blur-md px-2 py-0.5 rounded-md text-[10px] text-cyan-300 font-semibold border border-cyan-900/50">
-                    ${p.category}
+                    ${categoryName}
                 </div>
 
                 ${hasDiscount ? `
@@ -352,7 +354,7 @@ function renderProductCard(p) {
 
                 <!-- Stores Count Pill -->
                 <div class="absolute bottom-2 right-2 bg-black/80 backdrop-blur-md px-2 py-0.5 rounded text-[10px] text-gray-300 font-medium flex items-center gap-1 border border-gray-700">
-                    <i class="fa-solid fa-store text-cyan-400 text-[9px]"></i> ${p.store_count} Thai Stores
+                    <i class="fa-solid fa-store text-cyan-400 text-[9px]"></i> ${p.store_count} ${t('card_thai_stores')}
                 </div>
             </div>
 
@@ -370,12 +372,12 @@ function renderProductCard(p) {
             <div class="rounded-xl bg-gray-900/90 border border-gray-800 p-3 mb-3">
                 <div class="flex items-baseline justify-between mb-1">
                     <div>
-                        <span class="text-[10px] text-gray-400 block">Lowest Thai Market Price</span>
+                        <span class="text-[10px] text-gray-400 block">${t('card_lowest_price')}</span>
                         <span class="text-xl font-extrabold text-emerald-400">${lowest}</span>
                     </div>
                     ${msrp ? `
                         <div class="text-right">
-                            <span class="text-[10px] text-gray-500 block">Official MSRP</span>
+                            <span class="text-[10px] text-gray-500 block">${t('card_msrp')}</span>
                             <span class="text-xs text-gray-500 line-through">${msrp}</span>
                         </div>
                     ` : ''}
@@ -387,8 +389,8 @@ function renderProductCard(p) {
                         <strong class="text-gray-200">${p.best_store_name || 'JIB / iHaveCPU / Advice'}</strong>
                     </span>
                     ${savingsAmount ? `
-                        <span class="text-emerald-400 font-medium">Save ${savingsAmount}</span>
-                    ` : '<span class="text-gray-500">Official Price</span>'}
+                        <span class="text-emerald-400 font-medium">${t('card_save')} ${savingsAmount}</span>
+                    ` : `<span class="text-gray-500">${t('card_official_price')}</span>`}
                 </div>
             </div>
         </div>
@@ -400,13 +402,13 @@ function renderProductCard(p) {
                 class="flex-1 py-2 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-md"
             >
                 <i class="fa-solid fa-arrows-split-up-and-left text-[11px]"></i>
-                <span>Compare Prices</span>
+                <span>${t('card_compare_btn')}</span>
             </button>
 
             <button 
                 onclick="addToHeadToHead(${p.id}, '${p.name.replace(/'/g, "\\'")}')" 
                 class="p-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-cyan-400 border border-gray-700 text-xs transition-colors"
-                title="Add to Head-to-Head Compare"
+                title="${t('card_add_compare')}"
             >
                 <i class="fa-solid fa-scale-balanced"></i>
             </button>
@@ -420,7 +422,8 @@ function renderProductCard(p) {
 function setCategory(cat) {
     currentCategory = cat;
     document.querySelectorAll('.category-btn').forEach(btn => {
-        if (btn.textContent.trim() === cat || (cat === 'All' && btn.textContent.trim() === 'All Hardware')) {
+        const btnCat = btn.getAttribute('data-category') || btn.textContent.trim();
+        if (btnCat === cat || (cat === 'All' && (btnCat === 'All' || btnCat.startsWith('All Hardware')))) {
             btn.classList.add('active', 'bg-cyan-600', 'text-white');
             btn.classList.remove('bg-gray-800/80', 'text-gray-300');
         } else {
@@ -504,7 +507,7 @@ function handleSearchInput(query) {
             suggestionsBox.innerHTML = items.map(item => `
                 <div onclick="selectSuggestion(${item.id})" class="p-3 hover:bg-gray-800/80 cursor-pointer flex items-center justify-between gap-3 transition-colors">
                     <div class="flex items-center gap-3">
-                        <img src="${item.image_url || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=100'}" class="w-8 h-8 rounded object-cover border border-gray-700 bg-gray-800">
+                        <img src="${item.image_url || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=400&q=85'}" class="w-9 h-9 rounded-lg object-contain p-0.5 border border-gray-700 bg-gray-900 shrink-0">
                         <div>
                             <div class="text-xs font-bold text-white">${item.name}</div>
                             <div class="text-[10px] text-gray-400">${item.brand} • ${item.category}</div>
@@ -566,16 +569,16 @@ async function openProductModal(productId) {
         const res = await fetch(`/api/products/${productId}`);
         const data = await res.json();
 
-        document.getElementById('modal-product-img').src = data.image_url || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=400';
+        document.getElementById('modal-product-img').src = data.image_url || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=85';
         document.getElementById('modal-product-name').textContent = data.name;
         document.getElementById('modal-product-brand').textContent = data.brand;
-        document.getElementById('modal-product-category').textContent = data.category;
+        document.getElementById('modal-product-category').textContent = t(data.category) || data.category;
         document.getElementById('modal-product-msrp').textContent = data.msrp ? formatCurrency(data.msrp) : 'N/A';
-        document.getElementById('modal-product-lowest').textContent = `${formatCurrency(data.lowest_price)} on ${data.best_store || 'Thai Store'}`;
+        document.getElementById('modal-product-lowest').textContent = `${formatCurrency(data.lowest_price)} (${data.best_store || 'Thai Store'})`;
 
         const savingsBadge = document.getElementById('modal-savings-badge');
         if (data.total_savings && data.total_savings > 0) {
-            savingsBadge.textContent = `Save up to ${formatCurrency(data.total_savings)}`;
+            savingsBadge.textContent = `${t('modal_save_up_to')} ${formatCurrency(data.total_savings)}`;
             savingsBadge.classList.remove('hidden');
         } else {
             savingsBadge.classList.add('hidden');
@@ -586,12 +589,12 @@ async function openProductModal(productId) {
         tbody.innerHTML = (data.platforms || []).map(plat => {
             const isLowest = plat.is_lowest;
             const diffText = isLowest 
-                ? `<span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-bold border border-emerald-800 text-[10px]">🔥 CHEAPEST</span>`
+                ? `<span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-bold border border-emerald-800 text-[10px]">🔥 ${t('cheapest_badge')}</span>`
                 : `<span class="text-gray-400 font-mono text-[11px]">+${formatCurrency(plat.price_diff_from_lowest)}</span>`;
 
             const stockColor = plat.stock_status === 'in_stock' ? 'text-emerald-400 bg-emerald-950/80 border-emerald-800/80' : 
                                plat.stock_status === 'low_stock' ? 'text-amber-400 bg-amber-950/80 border-amber-800/80' : 'text-red-400 bg-red-950/80 border-red-800/80';
-            const stockLabel = plat.stock_status.replace('_', ' ').toUpperCase();
+            const stockLabel = plat.stock_status === 'in_stock' ? t('in_stock') : (plat.stock_status === 'low_stock' ? t('low_stock') : t('out_of_stock'));
 
             return `
             <tr class="${isLowest ? 'bg-cyan-950/20' : 'hover:bg-gray-800/40'} transition-colors">
@@ -613,7 +616,7 @@ async function openProductModal(productId) {
                     ${plat.original_price ? `<span class="text-[10px] text-gray-500 line-through ml-1">${formatCurrency(plat.original_price)}</span>` : ''}
                 </td>
                 <td class="py-3.5 px-4 text-emerald-400 font-semibold text-xs">
-                    FREE SHIPPING
+                    ${t('free_shipping').toUpperCase()}
                 </td>
                 <td class="py-3.5 px-4">
                     <div class="flex flex-col">
@@ -627,7 +630,7 @@ async function openProductModal(productId) {
                         target="_blank" 
                         class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg ${isLowest ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-gray-800 hover:bg-gray-700 text-gray-200'} font-semibold text-xs transition-colors shadow"
                     >
-                        <span>Buy on ${plat.store_name}</span>
+                        <span>${t('buy_on')} ${plat.store_name}</span>
                         <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
                     </a>
                 </td>
@@ -639,7 +642,7 @@ async function openProductModal(productId) {
         const specsGrid = document.getElementById('modal-specs-grid');
         const specs = data.specs || {};
         if (Object.keys(specs).length === 0) {
-            specsGrid.innerHTML = '<div class="text-gray-500 italic">No detailed specs available.</div>';
+            specsGrid.innerHTML = `<div class="text-gray-500 italic">${t('modal_no_specs')}</div>`;
         } else {
             specsGrid.innerHTML = Object.entries(specs).map(([k, v]) => `
                 <div class="p-2.5 rounded-lg bg-gray-900 border border-gray-800 flex justify-between gap-2">
@@ -902,6 +905,15 @@ function toggleMobileMenu() {
     const menu = document.getElementById('mobile-menu');
     if (menu) menu.classList.toggle('hidden');
 }
+
+// Language Switch Callback
+window.onLanguageChanged = function(lang) {
+    loadProducts();
+    const modal = document.getElementById('compare-modal');
+    if (currentModalProductId && modal && !modal.classList.contains('hidden')) {
+        openProductModal(currentModalProductId);
+    }
+};
 
 // Init on DOM load
 document.addEventListener('DOMContentLoaded', () => {

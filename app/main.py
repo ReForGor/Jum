@@ -87,11 +87,30 @@ async def home_page(
     store_count = (await db.execute(select(func.count(Store.id)))).scalar() or 0
     listing_count = (await db.execute(select(func.count(PriceListing.id)))).scalar() or 0
 
+    # Fetch exact category counts from database
+    cat_res = await db.execute(
+        select(Product.category, func.count(Product.id)).group_by(Product.category)
+    )
+    db_cat_counts = dict(cat_res.all())
+    category_items = [
+        {"name": cat, "count": db_cat_counts.get(cat, 0)}
+        for cat in settings.CATEGORIES
+    ]
+
+    # Fetch brands and their product counts from database
+    brand_res = await db.execute(
+        select(Product.brand, func.count(Product.id))
+        .group_by(Product.brand)
+        .order_by(func.count(Product.id).desc(), Product.brand.asc())
+    )
+    brand_items = [{"name": row[0], "count": row[1]} for row in brand_res.all()]
+
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
-            "categories": settings.CATEGORIES,
+            "categories": category_items,
+            "brands": brand_items,
             "prod_count": prod_count,
             "store_count": store_count,
             "listing_count": listing_count,

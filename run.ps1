@@ -26,7 +26,12 @@ if (-Not (Test-Path -Path ".\venv")) {
 }
 
 $PORT = "8000"
-$HOST = "0.0.0.0"
+$checkPort = Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue
+if ($checkPort) {
+    Write-Host "[INFO] Port 8000 is occupied or reserved, switching to port 8001..." -ForegroundColor Yellow
+    $PORT = "8001"
+}
+$APP_HOST = "0.0.0.0"
 
 Write-Host ""
 Write-Host "🌐 Web Dashboard:    http://localhost:$PORT" -ForegroundColor Cyan
@@ -37,4 +42,4 @@ Write-Host "⚡ Thai Scrapers:    http://localhost:$PORT/platforms" -ForegroundC
 Write-Host "🚀 API Swagger Docs: http://localhost:$PORT/docs" -ForegroundColor Blue
 Write-Host ""
 
-uvicorn app.main:app --host $HOST --port $PORT --reload
+uvicorn app.main:app --host $APP_HOST --port $PORT --reload

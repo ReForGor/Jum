@@ -67,3 +67,8 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+/* Image Crisp Sharpness */
+img {
+    image-rendering: -webkit-optimize-contrast;
+}

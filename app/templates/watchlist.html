@@ -199,7 +199,7 @@ async function loadWatchlistPage() {
             <tr class="hover:bg-gray-800/40 transition-colors">
                 <td class="py-3.5 px-4">
                     <div class="flex items-center gap-3">
-                        <img src="${item.product_image || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=100'}" class="w-10 h-10 rounded-lg object-cover bg-gray-900 border border-gray-700">
+                        <img src="${item.product_image || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=400&q=85'}" class="w-10 h-10 rounded-lg object-contain p-1 bg-gray-900 border border-gray-700 shrink-0">
                         <div>
                             <span class="text-[10px] font-bold uppercase text-cyan-400">${item.product_brand} • ${item.product_category}</span>
                             <div class="text-xs sm:text-sm font-bold text-white line-clamp-1">${item.product_name}</div>
@@ -244,7 +244,7 @@ async function loadWatchlistPage() {
 
 async function loadProductsForAddModal() {
     try {
-        const res = await fetch('/api/products?limit=100');
+        const res = await fetch('/api/products?limit=1000');
         watchlistProducts = await res.json();
         const select = document.getElementById('watchlist-product-select');
         select.innerHTML = '<option value="">-- Choose Product --</option>' + watchlistProducts.map(p => `

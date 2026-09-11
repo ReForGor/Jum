@@ -1,5 +1,5 @@
 from typing import Optional, List
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, desc, asc
 from sqlalchemy.orm import selectinload
@@ -15,6 +15,7 @@ router = APIRouter(prefix="/api", tags=["Products"])
 
 @router.get("/products", response_model=List[ProductSummaryOut])
 async def list_products(
+    response: Response,
     q: Optional[str] = Query(None, description="Search keyword in product name or description"),
     category: Optional[str] = Query(None, description="Filter by IT equipment category"),
     brand: Optional[str] = Query(None, description="Filter by brand name"),
@@ -22,7 +23,7 @@ async def list_products(
     min_price: Optional[float] = Query(None, description="Minimum price filter"),
     max_price: Optional[float] = Query(None, description="Maximum price filter"),
     sort_by: str = Query("cheapest", description="Sort by: cheapest, expensive, discount, name, newest"),
-    limit: int = Query(50, ge=1, le=100),
+    limit: int = Query(500, ge=1, le=2000),
     offset: int = Query(0, ge=0),
     db: AsyncSession = Depends(get_db)
 ):
@@ -115,6 +116,8 @@ async def list_products(
     elif sort_by == "newest":
         results.sort(key=lambda x: x.created_at, reverse=True)
 
+    response.headers["X-Total-Count"] = str(len(results))
+    response.headers["Access-Control-Expose-Headers"] = "X-Total-Count"
     return results[offset : offset + limit]
 
 @router.get("/products/{product_id}", response_model=ProductDetailOut)

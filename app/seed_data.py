@@ -56,7 +56,7 @@ PRODUCTS_DATA = [
         "category": "Graphics Cards (GPU)",
         "brand": "NVIDIA",
         "model_no": "RTX-5090-FE",
-        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=85",
         "description": "Flagship Blackwell architecture GPU with 32GB GDDR7 VRAM, 512-bit bus, 21,760 CUDA cores, and DLSS 4 support.",
         "msrp": 79900.0,
         "specs": {
@@ -76,7 +76,7 @@ PRODUCTS_DATA = [
         "category": "Graphics Cards (GPU)",
         "brand": "NVIDIA",
         "model_no": "RTX-5080-FE",
-        "image_url": "https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=1200&q=85",
         "description": "High-end Blackwell GPU featuring 16GB ultra-fast 30Gbps GDDR7 memory, 10,752 CUDA cores, and extreme 4K ray tracing.",
         "msrp": 39900.0,
         "specs": {
@@ -95,7 +95,7 @@ PRODUCTS_DATA = [
         "category": "Graphics Cards (GPU)",
         "brand": "AMD",
         "model_no": "RX-7900-XTX",
-        "image_url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=85",
         "description": "RDNA 3 flagship GPU with 24GB GDDR6, 96 Compute Units, DisplayPort 2.1, and 2nd Gen Raytracing Accelerators.",
         "msrp": 34900.0,
         "specs": {
@@ -113,7 +113,7 @@ PRODUCTS_DATA = [
         "category": "Graphics Cards (GPU)",
         "brand": "NVIDIA",
         "model_no": "RTX-4070TIS-16G",
-        "image_url": "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?auto=format&fit=crop&w=1200&q=85",
         "description": "Ada Lovelace architecture with upgraded 16GB GDDR6X and 256-bit bus, ideal for high frame-rate 1440p and 4K gaming.",
         "msrp": 29900.0,
         "specs": {
@@ -133,7 +133,7 @@ PRODUCTS_DATA = [
         "category": "Processors (CPU)",
         "brand": "AMD",
         "model_no": "100-100001084WOF",
-        "image_url": "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=1200&q=85",
         "description": "The world's fastest gaming processor built on Zen 5 with 2nd generation 3D V-Cache, 96MB L3 cache, and full overclocking support.",
         "msrp": 18900.0,
         "specs": {
@@ -152,7 +152,7 @@ PRODUCTS_DATA = [
         "category": "Processors (CPU)",
         "brand": "AMD",
         "model_no": "100-100001277WOF",
-        "image_url": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=1200&q=85",
         "description": "Zen 5 flagship workstation/content creation CPU with 16 cores, 32 threads, 5.7GHz boost, and PCIe Gen 5 readiness.",
         "msrp": 24900.0,
         "specs": {
@@ -171,7 +171,7 @@ PRODUCTS_DATA = [
         "category": "Processors (CPU)",
         "brand": "Intel",
         "model_no": "BX80768285K",
-        "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=85",
         "description": "Arrow Lake flagship desktop processor featuring 8 Performance Cores + 16 Efficient Cores, dedicated NPU for AI, and LGA 1851 socket.",
         "msrp": 23500.0,
         "specs": {
@@ -192,7 +192,7 @@ PRODUCTS_DATA = [
         "category": "Laptops & Notebooks",
         "brand": "Apple",
         "model_no": "MX2V3TH/A",
-        "image_url": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=85",
         "description": "Liquid Retina XDR display with nano-texture option, 14-core CPU / 32-core GPU M4 Max chip, 24-hour battery life, and Thunderbolt 5 ports.",
         "msrp": 129900.0,
         "specs": {
@@ -210,7 +210,7 @@ PRODUCTS_DATA = [
         "category": "Laptops & Notebooks",
         "brand": "ASUS",
         "model_no": "GU605MZ-QR043W",
-        "image_url": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1200&q=85",
         "description": "Ultra-slim CNC aluminum gaming laptop with 16\" 2.5K 240Hz ROG Nebula OLED, Intel Core Ultra 9 185H, and RTX 4080.",
         "msrp": 89900.0,
         "specs": {
@@ -230,7 +230,7 @@ PRODUCTS_DATA = [
         "category": "Storage (SSD & HDD)",
         "brand": "Samsung",
         "model_no": "MZ-V9P2T0B/TH",
-        "image_url": "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1200&q=85",
         "description": "Sequential read speeds up to 7,450 MB/s and write speeds up to 6,900 MB/s. Built with Samsung V-NAND TLC and Nickel-coated controller.",
         "msrp": 6890.0,
         "specs": {
@@ -247,7 +247,7 @@ PRODUCTS_DATA = [
         "category": "Storage (SSD & HDD)",
         "brand": "Crucial",
         "model_no": "CT2000T705SSD3",
-        "image_url": "https://images.unsplash.com/photo-1544652478-6653e09f18a2?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1544652478-6653e09f18a2?auto=format&fit=crop&w=1200&q=85",
         "description": "Blazing Gen5 performance with read speeds up to 14,500 MB/s and write speeds up to 12,700 MB/s, Micron 232-layer TLC NAND.",
         "msrp": 9990.0,
         "specs": {
@@ -266,7 +266,7 @@ PRODUCTS_DATA = [
         "category": "Memory (RAM)",
         "brand": "Corsair",
         "model_no": "CMH64GX5M2B6000C30",
-        "image_url": "https://images.unsplash.com/photo-1562976540-1502c2145186?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1562976540-1502c2145186?auto=format&fit=crop&w=1200&q=85",
         "description": "High performance DDR5 memory kit with dynamic ten-zone RGB lighting, Intel XMP 3.0 & AMD EXPO profile support, CL30 low latency.",
         "msrp": 7490.0,
         "specs": {
@@ -284,7 +284,7 @@ PRODUCTS_DATA = [
         "category": "Monitors & Displays",
         "brand": "LG",
         "model_no": "32GS95UE-B",
-        "image_url": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1200&q=85",
         "description": "World's first VESA-certified Dual-Hz OLED monitor: 4K @ 240Hz for immersive AAA gaming or 1080p @ 480Hz for competitive esports at 0.03ms response.",
         "msrp": 45900.0,
         "specs": {
@@ -300,7 +300,7 @@ PRODUCTS_DATA = [
         "category": "Monitors & Displays",
         "brand": "Dell Alienware",
         "model_no": "AW3423DWF",
-        "image_url": "https://images.unsplash.com/photo-1586210579191-33b45e38fa2c?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1586210579191-33b45e38fa2c?auto=format&fit=crop&w=1200&q=85",
         "description": "Quantum Dot OLED 1800R curved gaming monitor with infinite contrast, 99.3% DCI-P3 color gamut, and 0.1ms response time.",
         "msrp": 28900.0,
         "specs": {
@@ -318,7 +318,7 @@ PRODUCTS_DATA = [
         "category": "Power Supplies (PSU)",
         "brand": "Corsair",
         "model_no": "CP-9020253-NA",
-        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=600&q=80",
+        "image_url": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=85",
         "description": "Side-mounted modular interface for easier cable management, 100% Japanese 105°C capacitors, ATX 3.0 certified with PCIe 5.0 12VHPWR cable.",
         "msrp": 6590.0,
         "specs": {

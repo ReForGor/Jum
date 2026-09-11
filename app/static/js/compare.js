@@ -10,7 +10,7 @@ function formatTHB(amount) {
 
 async function initComparator() {
     try {
-        const res = await fetch('/api/products?limit=100');
+        const res = await fetch('/api/products?limit=1000');
         allAvailableProducts = await res.json();
     } catch(err) {
         console.error('Failed to load products for comparator', err);
@@ -44,7 +44,7 @@ function renderSlots() {
                     <i class="fa-solid fa-xmark"></i>
                 </button>
                 <div class="flex items-center gap-3">
-                    <img src="${prod.image_url || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=200'}" class="w-12 h-12 rounded-lg object-cover bg-gray-900 border border-gray-700">
+                    <img src="${prod.image_url || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=400&q=85'}" class="w-12 h-12 rounded-lg object-contain p-1 bg-gray-900 border border-gray-700 shrink-0">
                     <div class="pr-6">
                         <span class="text-[10px] font-bold text-cyan-400 uppercase">${prod.brand}</span>
                         <h4 class="text-xs font-bold text-white line-clamp-1">${prod.name}</h4>
@@ -102,7 +102,7 @@ async function fetchAndRenderComparison() {
                         </div>
                     ` : '<div class="h-5 mb-2"></div>'}
                     <div class="flex items-center gap-3 mb-3">
-                        <img src="${p.image_url || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=200'}" class="w-12 h-12 rounded-lg object-cover border border-gray-700 bg-gray-800">
+                        <img src="${p.image_url || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=400&q=85'}" class="w-12 h-12 rounded-lg object-contain p-1 border border-gray-700 bg-gray-800 shrink-0">
                         <div>
                             <span class="text-[10px] uppercase font-bold text-gray-400">${p.brand}</span>
                             <div class="text-xs font-bold text-white line-clamp-2">${p.name}</div>
