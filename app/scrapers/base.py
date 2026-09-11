@@ -10,11 +10,9 @@ from app.config import settings
 logger = logging.getLogger(__name__)
 
 USER_AGENTS = [
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (X11; Linux x86_64; rv:130.0) Gecko/20100101 Firefox/130.0",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15"
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
 ]
 
 class BasePlatformScraper(ABC):
@@ -26,8 +24,7 @@ class BasePlatformScraper(ABC):
         self.headers = {
             "User-Agent": random.choice(USER_AGENTS),
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-            "Accept-Language": "en-US,en;q=0.9",
-            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "th-TH,th;q=0.9,en-US;q=0.8,en;q=0.7",
             "DNT": "1",
             "Connection": "keep-alive",
             "Upgrade-Insecure-Requests": "1"
@@ -45,15 +42,17 @@ class BasePlatformScraper(ABC):
             logger.error(f"[{self.platform_name}] Exception fetching {url}: {e}")
             return None
 
-    def clean_price(self, price_str: str) -> Optional[float]:
-        if not price_str:
+    def clean_price(self, price_val: Any) -> Optional[float]:
+        if price_val is None:
             return None
-        # Remove currency symbols, commas, spaces
-        cleaned = re.sub(r"[^\d.]", "", price_str)
+        if isinstance(price_val, (int, float)):
+            val = float(price_val)
+            return round(val, 2) if val > 0 else None
+        cleaned = re.sub(r"[^\d.]", "", str(price_val))
         try:
             val = float(cleaned)
-            return round(val, 2)
-        except ValueError:
+            return round(val, 2) if val > 0 else None
+        except (ValueError, TypeError):
             return None
 
     @abstractmethod

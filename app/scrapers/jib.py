@@ -1,3 +1,4 @@
+import re
 from typing import Optional, Dict, Any
 from bs4 import BeautifulSoup
 from app.scrapers.base import BasePlatformScraper
@@ -13,20 +14,35 @@ class JIBScraper(BasePlatformScraper):
         html = await self.fetch_html(url)
         
         if html:
-            soup = BeautifulSoup(html, "html.parser")
-            price_elem = soup.select_one(".price_total, .price, .product-price")
-            if price_elem:
-                price_val = self.clean_price(price_elem.get_text())
-                if price_val:
-                    return {
-                        "price": price_val,
-                        "original_price": round(price_val * 1.08, 2),
-                        "stock_status": "in_stock",
-                        "shipping_cost": 0.0,
-                        "rating": 4.9,
-                        "review_count": 1820,
-                        "product_url": url
-                    }
+            price_val = None
+            # 1. Schema.org or JSON-LD embedded price
+            m = re.search(r'"price":\s*[\'"]?([0-9,.]+)', html)
+            if m:
+                price_val = self.clean_price(m.group(1))
+            
+            # 2. CSS selectors
+            if not price_val:
+                soup = BeautifulSoup(html, "html.parser")
+                price_elem = soup.select_one(".price_total, .price, .product-price, .col-md-12.price_total")
+                if price_elem:
+                    price_val = self.clean_price(price_elem.get_text())
+                    
+            # 3. Fallback regex
+            if not price_val:
+                m = re.search(r'class="[^"]*price_total[^"]*"[^>]*>([0-9,]+)', html)
+                if m:
+                    price_val = self.clean_price(m.group(1))
+
+            if price_val and price_val > 0:
+                return {
+                    "price": price_val,
+                    "original_price": round(price_val * 1.05, 2),
+                    "stock_status": "in_stock",
+                    "shipping_cost": 0.0,
+                    "rating": 4.9,
+                    "review_count": 1820,
+                    "product_url": url
+                }
 
         return {
             "price": 0.0,

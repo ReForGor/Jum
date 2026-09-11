@@ -576,6 +576,18 @@ async def seed_more_items():
             check = await db.execute(select(Product).where(Product.slug == pdata["slug"]))
             existing = check.scalar_one_or_none()
             if existing:
+                if existing.slug == "logitech-g-pro-x-superlight-2" and "ihavecpu" in stores:
+                    listing_res = await db.execute(
+                        select(PriceListing).where(
+                            PriceListing.product_id == existing.id,
+                            PriceListing.store_id == stores["ihavecpu"].id
+                        )
+                    )
+                    listing = listing_res.scalar_one_or_none()
+                    if listing:
+                        listing.price = 3990.0
+                        listing.original_price = round(existing.msrp * 1.06 / 10) * 10
+                        listing.last_checked = datetime.utcnow()
                 print(f"Skipping existing: {pdata['name']}")
                 continue
 
@@ -588,7 +600,10 @@ async def seed_more_items():
             msrp = prod.msrp
             for slug, st_obj in stores.items():
                 offset = store_offsets.get(slug, 0.0)
-                current_p = round((msrp * (1.0 + offset)) / 10) * 10
+                if prod.slug == "logitech-g-pro-x-superlight-2" and slug == "ihavecpu":
+                    current_p = 3990.0
+                else:
+                    current_p = round((msrp * (1.0 + offset)) / 10) * 10
                 orig_p = round((msrp * 1.06) / 10) * 10 if current_p < msrp else None
 
                 p_url = generate_store_product_url(

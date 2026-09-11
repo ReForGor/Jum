@@ -1,5 +1,7 @@
 import uuid
 import logging
+import asyncio
+import random
 from datetime import datetime
 from typing import Optional, List, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -36,7 +38,7 @@ class ScraperManager:
         db: AsyncSession,
         platform_slug: Optional[str] = None,
         product_id: Optional[int] = None,
-        simulate: bool = True
+        simulate: bool = False
     ) -> Dict[str, Any]:
         job_id = str(uuid.uuid4())[:8]
         started_at = datetime.utcnow()
@@ -94,6 +96,8 @@ class ScraperManager:
                         else:
                             scraper = self.scrapers.get(store.slug)
                             if scraper:
+                                # Polite jitter delay to prevent rate-limiting or anti-bot triggers
+                                await asyncio.sleep(random.uniform(0.5, 1.5))
                                 p_url = listing.product_url if listing else None
                                 scraped_data = await scraper.scrape_product(
                                     product_name=prod.name,

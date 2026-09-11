@@ -25,6 +25,17 @@ async def run_scraper_job(
     )
     return result
 
+from app.services.scheduler import scheduler
+
+@router.get("/scheduler")
+async def get_scheduler_status():
+    return scheduler.get_status()
+
+@router.post("/scheduler/trigger")
+async def trigger_scheduler_job(background_tasks: BackgroundTasks):
+    background_tasks.add_task(scheduler.execute_scrape_job, False)
+    return {"message": "Daily live scrape job triggered in background", "simulate": False}
+
 @router.get("/last-job")
 async def get_last_job():
     if not scraper_manager.last_job_result:

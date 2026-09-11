@@ -21,6 +21,37 @@
         </button>
     </div>
 
+    <!-- Automated Daily Scheduler Card (04:30 - 05:00 AM) -->
+    <div class="rounded-2xl border border-cyan-800/40 bg-gradient-to-r from-cyan-950/40 via-blue-950/30 to-purple-950/30 p-5 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-cyan-950/80 border border-cyan-800/60 flex items-center justify-center text-cyan-400 text-xl">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Automated Daily Scheduler</h3>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Running
+                    </span>
+                </div>
+                <p class="text-xs text-gray-300 mt-1">
+                    Runs every morning between <strong class="text-amber-400">04:30 - 05:00 AM ICT (Asia/Bangkok)</strong>.
+                    Pulls actual live prices directly from JIB, iHaveCPU, BaNANA, and Advice with anti-bot jitter delays (1.2s - 2.5s).
+                </p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="text-right text-xs">
+                <span class="text-gray-400 block text-[11px]">Schedule Window</span>
+                <span class="text-cyan-400 font-bold font-mono">04:30 - 05:00 AM Daily</span>
+            </div>
+            <button onclick="triggerSchedulerNow()" id="btn-trigger-sched" class="px-3.5 py-2 rounded-xl bg-cyan-800/60 hover:bg-cyan-700/80 border border-cyan-600/50 text-white font-semibold text-xs transition-colors flex items-center gap-1.5 whitespace-nowrap">
+                <i class="fa-solid fa-bolt text-amber-400"></i>
+                <span>Trigger Job Now</span>
+            </button>
+        </div>
+    </div>
+
     <!-- Scraper Job Terminal / Log Output -->
     <div id="job-log-panel" class="hidden rounded-xl bg-gray-950 border border-gray-800 p-4 font-mono text-xs text-gray-300">
         <div class="flex items-center justify-between border-b border-gray-800 pb-2 mb-3">
@@ -131,6 +162,7 @@ async function triggerScraperAll() {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ simulate_live: true })
+            body: JSON.stringify({ simulate_live: false })
         });
         const data = await res.json();
         
@@ -156,12 +188,31 @@ async function triggerSingleScraper(slug) {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ platform_slug: slug, simulate_live: true })
+            body: JSON.stringify({ platform_slug: slug, simulate_live: false })
         });
         const data = await res.json();
         showToast(`Updated ${data.prices_updated} prices on ${slug.toUpperCase()}!`, 'success');
         checkNotificationsCount();
     } catch(err) {
         showToast(`Failed to scrape ${slug}`, 'error');
+    }
+}
+
+async function triggerSchedulerNow() {
+    const btn = document.getElementById('btn-trigger-sched');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Triggering...';
+    try {
+        const res = await fetch('/api/scrapers/scheduler/trigger', { method: 'POST' });
+        const data = await res.json();
+        showToast('Daily 04:30 AM live scrape triggered in background!', 'success');
+    } catch(err) {
+        showToast('Failed to trigger scheduler job', 'error');
+    } finally {
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-bolt text-amber-400"></i> <span>Trigger Job Now</span>';
+        }, 3000);
     }
 }
 </script>

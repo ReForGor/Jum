@@ -27,6 +27,8 @@ from app.api import (
     admin_router
 )
 
+from app.services.scheduler import scheduler
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("techprice")
 
@@ -38,7 +40,15 @@ async def lifespan(app: FastAPI):
         logger.info("Seeding initial Thai IT equipment platforms (JIB, iHaveCPU, BaNANA, Advice)...")
         await seed_initial_data(session)
     logger.info("TechPrice Thai IT Aggregation Engine initialized and ready!")
+    
+    # Start automated daily price sync scheduler (04:30 - 05:00 AM Bangkok Time)
+    logger.info("Starting automated daily 04:30 AM price sync scheduler...")
+    scheduler.start()
+    
     yield
+    
+    logger.info("Shutting down daily scheduler...")
+    scheduler.stop()
     logger.info("Shutting down TechPrice Engine.")
 
 app = FastAPI(
