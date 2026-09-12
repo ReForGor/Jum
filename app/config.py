@@ -1,7 +1,9 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
 
 class Settings:
     PROJECT_NAME: str = "TechPrice - Thai IT Equipment Price Aggregator"
@@ -52,5 +54,15 @@ class Settings:
         "PC Cases & Cooling",
         "Gaming Peripherals"
     ]
+
+    # Email Notification & SMTP Settings
+    SMTP_HOST: str = os.getenv("SMTP_HOST", "")
+    SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
+    SMTP_USER: str = os.getenv("SMTP_USER", "")
+    SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")
+    SMTP_FROM_EMAIL: str = os.getenv("SMTP_FROM_EMAIL", "alerts@techprice.in.th")
+    SMTP_FROM_NAME: str = os.getenv("SMTP_FROM_NAME", "TechPrice IT Alerts")
+    SMTP_TLS: bool = os.getenv("SMTP_TLS", "true").lower() in ("true", "1", "yes")
+    EMAIL_DEV_MODE: bool = os.getenv("EMAIL_DEV_MODE", "true").lower() in ("true", "1", "yes")
 
 settings = Settings()

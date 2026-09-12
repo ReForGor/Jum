@@ -13,6 +13,7 @@ from app.models.price_listing import PriceListing
 from app.models.price_history import PriceHistory
 from app.models.alert import PriceAlert
 from app.models.notification import Notification
+from app.services.email_service import email_service
 from app.scrapers.jib import JIBScraper
 from app.scrapers.ihavecpu import IHaveCPUScraper
 from app.scrapers.banana import BananaScraper
@@ -188,6 +189,22 @@ class ScraperManager:
                                 alert.last_notified_price = price_val
                                 alert.current_lowest_price = price_val
                                 triggered_alerts += 1
+
+                                # Dispatch price drop email
+                                if alert.email:
+                                    try:
+                                        await email_service.send_price_drop_alert(
+                                            to_email=alert.email,
+                                            product_name=prod.name,
+                                            new_price=price_val,
+                                            target_price=alert.target_price,
+                                            store_name=store.name,
+                                            product_url=listing.product_url,
+                                            product_image=prod.image_url,
+                                            product_id=prod.id
+                                        )
+                                    except Exception as mail_err:
+                                        logger.error(f"Failed to dispatch price drop email to {alert.email}: {mail_err}")
 
                         self.last_run_times[store.slug] = datetime.utcnow()
 

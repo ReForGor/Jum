@@ -58,6 +58,7 @@ async def get_product_price_history(
             }
         store_series_map[st.id]["data_points"].append({
             "timestamp": ph.timestamp.isoformat(),
+            "iso_date": ph.timestamp.strftime("%Y-%m-%d"),
             "date": ph.timestamp.strftime("%b %d"),
             "price": ph.price
         })

@@ -24,7 +24,8 @@ from app.api import (
     export_router,
     auth_router,
     notifications_router,
-    admin_router
+    admin_router,
+    emails_router
 )
 
 from app.services.scheduler import scheduler
@@ -84,6 +85,7 @@ app.include_router(export_router)
 app.include_router(auth_router)
 app.include_router(notifications_router)
 app.include_router(admin_router)
+app.include_router(emails_router)
 
 # ----------------- UI Web Pages -----------------
 
@@ -105,6 +107,7 @@ async def home_page(
     category_items = [
         {"name": cat, "count": db_cat_counts.get(cat, 0)}
         for cat in settings.CATEGORIES
+        if db_cat_counts.get(cat, 0) > 0
     ]
 
     # Fetch brands and their product counts from database

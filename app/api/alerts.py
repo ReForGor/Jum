@@ -11,6 +11,7 @@ from app.models.product import Product
 from app.models.user import User
 from app.models.price_listing import PriceListing
 from app.models.notification import Notification
+from app.services.email_service import email_service
 from app.schemas.alert import AlertCreate, AlertUpdate, AlertOut, WatchlistItemOut
 from app.auth import get_current_user_optional, get_current_user
 
@@ -73,7 +74,7 @@ async def create_price_alert(
         if lowest_listing.price <= data.target_price:
             alert.triggered_at = datetime.utcnow()
             alert.last_notified_price = lowest_listing.price
-            # Create instant notification!
+            # Create instant in-app notification
             notif = Notification(
                 user_id=user.id if user else None,
                 email=email,
@@ -92,6 +93,28 @@ async def create_price_alert(
                 is_read=False
             )
             db.add(notif)
+            
+            # Dispatch Price Drop Email
+            await email_service.send_price_drop_alert(
+                to_email=email,
+                product_name=prod.name,
+                new_price=lowest_listing.price,
+                target_price=data.target_price,
+                store_name=lowest_listing.store.name,
+                product_url=lowest_listing.product_url,
+                product_image=prod.image_url,
+                product_id=prod.id
+            )
+        else:
+            # Dispatch Alert Confirmation Email
+            await email_service.send_alert_confirmation(
+                to_email=email,
+                product_name=prod.name,
+                target_price=data.target_price,
+                current_lowest_price=lowest_listing.price,
+                product_image=prod.image_url,
+                product_id=prod.id
+            )
 
     await db.commit()
     await db.refresh(alert)

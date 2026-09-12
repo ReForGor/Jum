@@ -8,6 +8,7 @@ from app.api.export import router as export_router
 from app.api.auth import router as auth_router
 from app.api.notifications import router as notifications_router
 from app.api.admin import router as admin_router
+from app.api.emails import router as emails_router
 
 __all__ = [
     "products_router",
@@ -19,5 +20,6 @@ __all__ = [
     "export_router",
     "auth_router",
     "notifications_router",
-    "admin_router"
+    "admin_router",
+    "emails_router"
 ]

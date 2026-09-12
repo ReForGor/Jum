@@ -705,18 +705,37 @@ async function loadProductHistory(productId, days = 30) {
             }
         });
 
-        // Collect all distinct dates
-        const dateSet = new Set();
+        // Collect all distinct dates and sort chronologically
+        const dateMap = new Map();
         (data.series || []).forEach(s => {
-            s.data_points.forEach(dp => dateSet.add(dp.date));
+            (s.data_points || []).forEach(dp => {
+                const iso = dp.iso_date || (dp.timestamp ? dp.timestamp.split('T')[0] : dp.date);
+                if (!dateMap.has(iso)) {
+                    dateMap.set(iso, dp.date || iso);
+                }
+            });
         });
-        const labels = Array.from(dateSet);
+
+        // Chronologically sort dates (YYYY-MM-DD sorts perfectly in natural order)
+        const sortedIsoDates = Array.from(dateMap.keys()).sort();
+        const labels = sortedIsoDates.map(iso => dateMap.get(iso));
 
         // Build datasets
         const datasets = (data.series || []).map(s => {
-            const dataMap = {};
-            s.data_points.forEach(dp => { dataMap[dp.date] = dp.price; });
-            const plotData = labels.map(l => dataMap[l] !== undefined ? dataMap[l] : null);
+            const priceMap = {};
+            (s.data_points || []).forEach(dp => {
+                const iso = dp.iso_date || (dp.timestamp ? dp.timestamp.split('T')[0] : dp.date);
+                priceMap[iso] = dp.price;
+            });
+
+            let runningPrice = null;
+            const plotData = sortedIsoDates.map(iso => {
+                if (priceMap[iso] !== undefined && priceMap[iso] !== null) {
+                    runningPrice = priceMap[iso];
+                    return runningPrice;
+                }
+                return runningPrice;
+            });
 
             return {
                 label: s.store_name,
@@ -724,7 +743,7 @@ async function loadProductHistory(productId, days = 30) {
                 borderColor: s.store_color || '#06b6d4',
                 backgroundColor: s.store_color ? `${s.store_color}22` : 'rgba(6, 182, 212, 0.1)',
                 borderWidth: 2,
-                tension: 0.3,
+                tension: 0.1,
                 pointRadius: 3,
                 pointHoverRadius: 6,
                 spanGaps: true
@@ -818,7 +837,8 @@ async function handleCreateAlert(e) {
         });
 
         if (res.ok) {
-            showToast(`Price drop alert set for ${formatCurrency(targetPrice)}!`, 'success');
+            const emailMsg = email ? ` (ส่งอีเมลแจ้งไปที่ ${email})` : '';
+            showToast(`ตั้งแจ้งเตือนราคา ${formatCurrency(targetPrice)} สำเร็จ!${emailMsg}`, 'success');
             checkNotificationsCount();
         } else {
             const data = await res.json();
