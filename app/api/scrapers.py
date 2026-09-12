@@ -23,6 +23,10 @@ async def run_scraper_job(
         product_id=req.product_id,
         simulate=req.simulate_live
     )
+    from app.api.products import clear_products_cache
+    from app.api.history import clear_history_cache
+    clear_products_cache()
+    clear_history_cache()
     return result
 
 from app.services.scheduler import scheduler

@@ -8,26 +8,12 @@ class MockLiveScraper:
     """
     @staticmethod
     def simulate_price_scrape(base_msrp: float, store_slug: str, current_price: Optional[float] = None) -> Dict[str, Any]:
-        msrp = base_msrp or 18900.0
+        # Always prioritize existing verified real price to prevent random spikes
+        base = current_price if (current_price and current_price > 0) else (base_msrp or 18900.0)
         
-        # Thai store pricing characteristics
-        multipliers = {
-            "jib": (0.93, 1.02),       # JIB official retail baseline, high stock reliability
-            "ihavecpu": (0.88, 0.98),  # iHaveCPU competitive enthusiast pricing & GPU promos
-            "banana": (0.94, 1.03),    # BaNANA IT nationwide retail warranty & points
-            "advice": (0.89, 1.00)     # Advice IT wholesale & flash sales
-        }
-        
-        low_mult, high_mult = multipliers.get(store_slug, (0.92, 1.02))
-        
-        # 12% chance of special flash sale discount (12-18% off)
-        is_flash_sale = random.random() < 0.12
-        if is_flash_sale:
-            simulated_price = round(msrp * random.uniform(0.82, 0.88) / 10) * 10
-            original_price = round(msrp * 1.05 / 10) * 10
-        else:
-            simulated_price = round(msrp * random.uniform(low_mult, high_mult) / 10) * 10
-            original_price = round(msrp * 1.06 / 10) * 10 if simulated_price < msrp else None
+        # Real prices in stores stay virtually identical to the live scraped value
+        simulated_price = float(base)
+        original_price = round(base * 1.08, 2)
 
         # Stock status
         stock_roll = random.random()

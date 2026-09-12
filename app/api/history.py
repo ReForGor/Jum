@@ -1,3 +1,4 @@
+import time
 from datetime import datetime, timedelta
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -14,12 +15,24 @@ from app.schemas.history import ProductPriceHistoryOut, StoreHistorySeries
 
 router = APIRouter(prefix="/api/prices", tags=["Price History"])
 
+_HISTORY_CACHE = {}
+HISTORY_CACHE_TTL = 180
+
+def clear_history_cache():
+    _HISTORY_CACHE.clear()
+
 @router.get("/history/{product_id}", response_model=ProductPriceHistoryOut)
 async def get_product_price_history(
     product_id: int,
     days: int = Query(30, ge=1, le=365, description="Number of historical days to fetch"),
     db: AsyncSession = Depends(get_db)
 ):
+    now_ts = time.time()
+    cache_key = (product_id, days)
+    if cache_key in _HISTORY_CACHE:
+        cached_ts, cached_data = _HISTORY_CACHE[cache_key]
+        if now_ts - cached_ts < HISTORY_CACHE_TTL:
+            return cached_data
     prod_res = await db.execute(
         select(Product)
         .options(selectinload(Product.listings).selectinload(PriceListing.store))
@@ -73,7 +86,7 @@ async def get_product_price_history(
         StoreHistorySeries(**data) for data in store_series_map.values()
     ]
 
-    return ProductPriceHistoryOut(
+    out = ProductPriceHistoryOut(
         product_id=product.id,
         product_name=product.name,
         lowest_historical_price=lowest_hist,
@@ -81,3 +94,5 @@ async def get_product_price_history(
         current_lowest_price=current_lowest,
         series=series_list
     )
+    _HISTORY_CACHE[cache_key] = (now_ts, out)
+    return out

@@ -11,6 +11,9 @@ let currentModalProductId = null;
 let priceChartInstance = null;
 let searchDebounceTimer = null;
 let currentUser = null;
+window.loadedProductsMap = new Map();
+window.productDetailCache = new Map();
+window.productHistoryCache = new Map();
 
 const CURRENCY_RATES = {
     THB: { rate: 1.0, symbol: '฿' },
@@ -282,14 +285,16 @@ async function loadProducts() {
 
     if (!grid) return;
 
-    grid.innerHTML = Array(6).fill(0).map(() => `
-        <div class="bg-[#111827] border border-gray-800 rounded-2xl p-5 animate-pulse space-y-4">
-            <div class="h-44 bg-gray-800 rounded-xl"></div>
-            <div class="h-4 bg-gray-800 rounded w-1/3"></div>
-            <div class="h-5 bg-gray-800 rounded w-3/4"></div>
-            <div class="h-8 bg-gray-800 rounded"></div>
-        </div>
-    `).join('');
+    if (grid.children.length === 0) {
+        grid.innerHTML = Array(6).fill(0).map(() => `
+            <div class="bg-[#111827] border border-gray-800 rounded-2xl p-5 animate-pulse space-y-4">
+                <div class="h-44 bg-gray-800 rounded-xl"></div>
+                <div class="h-4 bg-gray-800 rounded w-1/3"></div>
+                <div class="h-5 bg-gray-800 rounded w-3/4"></div>
+                <div class="h-8 bg-gray-800 rounded"></div>
+            </div>
+        `).join('');
+    }
 
     try {
         let url = `/api/products?sort_by=${currentSort}&limit=1000`;
@@ -302,6 +307,10 @@ async function loadProducts() {
         const res = await fetch(url);
         const products = await res.json();
         const totalCount = res.headers.get('X-Total-Count') || products.length;
+
+        // Populate client product map
+        window.loadedProductsMap.clear();
+        products.forEach(p => window.loadedProductsMap.set(p.id, p));
 
         if (resultsCount) {
             resultsCount.textContent = t('showing_items', { count: products.length });
@@ -567,11 +576,31 @@ async function openProductModal(productId) {
     const modal = document.getElementById('compare-modal');
     if (!modal) return;
 
+    // Instant Pre-render from card cache (0ms instant visual response)
+    const cardData = window.loadedProductsMap.get(productId);
+    if (cardData) {
+        document.getElementById('modal-product-img').src = cardData.image_url || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=85';
+        document.getElementById('modal-product-name').textContent = cardData.name;
+        document.getElementById('modal-product-brand').textContent = cardData.brand;
+        document.getElementById('modal-product-category').textContent = t(cardData.category) || cardData.category;
+        document.getElementById('modal-product-msrp').textContent = cardData.msrp ? formatCurrency(cardData.msrp) : 'N/A';
+        document.getElementById('modal-product-lowest').textContent = `${formatCurrency(cardData.lowest_price)} (${cardData.best_store_name || 'Thai Store'})`;
+    }
+
     modal.classList.remove('hidden');
 
     try {
-        const res = await fetch(`/api/products/${productId}`);
-        const data = await res.json();
+        const detailPromise = window.productDetailCache.has(productId)
+            ? Promise.resolve(window.productDetailCache.get(productId))
+            : fetch(`/api/products/${productId}`).then(r => r.json()).then(d => {
+                window.productDetailCache.set(productId, d);
+                return d;
+            });
+
+        const histPromise = loadProductHistory(productId, 30);
+
+        const data = await detailPromise;
+        if (!data || currentModalProductId !== productId) return;
 
         document.getElementById('modal-product-img').src = data.image_url || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&q=85';
         document.getElementById('modal-product-name').textContent = data.name;
@@ -669,9 +698,7 @@ async function openProductModal(productId) {
             document.getElementById('alert-email').value = currentUser.email;
         }
 
-        // Load 30-day price history chart
-        loadProductHistory(productId, 30);
-
+        await histPromise;
     } catch (err) {
         console.error('Error opening product modal:', err);
     }
@@ -686,8 +713,17 @@ function closeModal() {
 
 async function loadProductHistory(productId, days = 30) {
     try {
-        const res = await fetch(`/api/prices/history/${productId}?days=${days}`);
-        const data = await res.json();
+        const cacheKey = `${productId}_${days}`;
+        let data;
+        if (window.productHistoryCache.has(cacheKey)) {
+            data = window.productHistoryCache.get(cacheKey);
+        } else {
+            const res = await fetch(`/api/prices/history/${productId}?days=${days}`);
+            data = await res.json();
+            window.productHistoryCache.set(cacheKey, data);
+        }
+
+        if (currentModalProductId !== productId) return;
 
         // Update stat badges
         document.getElementById('stat-hist-lowest').textContent = formatCurrency(data.lowest_historical_price);
@@ -764,6 +800,10 @@ async function loadProductHistory(productId, days = 30) {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                animation: {
+                    duration: 250,
+                    easing: 'easeOutQuart'
+                },
                 interaction: {
                     mode: 'index',
                     intersect: false
@@ -879,9 +919,12 @@ async function triggerGlobalScrape() {
         const res = await fetch('/api/scrapers/run', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ simulate_live: true })
+            body: JSON.stringify({ simulate_live: false })
         });
         const data = await res.json();
+        // Clear client caches so fresh prices are shown
+        window.productDetailCache.clear();
+        window.productHistoryCache.clear();
         showToast(`Refreshed prices across JIB, iHaveCPU, BaNANA, Advice! (${data.triggered_alerts} alerts triggered)`, 'success');
         loadProducts();
         checkNotificationsCount();

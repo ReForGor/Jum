@@ -1,3 +1,4 @@
+import time
 from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -14,6 +15,15 @@ from app.utils.store_urls import generate_store_product_url
 
 router = APIRouter(prefix="/api", tags=["Products"])
 
+# In-Memory Response Cache for Lightning Fast Responses
+_PRODUCTS_CACHE = {}
+_PRODUCT_DETAIL_CACHE = {}
+CACHE_TTL = 180  # 3 minutes
+
+def clear_products_cache():
+    _PRODUCTS_CACHE.clear()
+    _PRODUCT_DETAIL_CACHE.clear()
+
 @router.get("/products", response_model=List[ProductSummaryOut])
 async def list_products(
     response: Response,
@@ -28,6 +38,15 @@ async def list_products(
     offset: int = Query(0, ge=0),
     db: AsyncSession = Depends(get_db)
 ):
+    cache_key = (q, category, brand, store_slug, min_price, max_price, sort_by, limit, offset)
+    now_ts = time.time()
+    if cache_key in _PRODUCTS_CACHE:
+        cached_ts, total_cnt, cached_res = _PRODUCTS_CACHE[cache_key]
+        if now_ts - cached_ts < CACHE_TTL:
+            response.headers["X-Total-Count"] = str(total_cnt)
+            response.headers["Access-Control-Expose-Headers"] = "X-Total-Count"
+            return cached_res
+
     query = select(Product).options(
         selectinload(Product.listings).selectinload(PriceListing.store)
     )
@@ -135,12 +154,20 @@ async def list_products(
     elif sort_by == "newest":
         results.sort(key=lambda x: x.created_at, reverse=True)
 
+    paginated = results[offset : offset + limit]
+    _PRODUCTS_CACHE[cache_key] = (now_ts, len(results), paginated)
     response.headers["X-Total-Count"] = str(len(results))
     response.headers["Access-Control-Expose-Headers"] = "X-Total-Count"
-    return results[offset : offset + limit]
+    return paginated
 
 @router.get("/products/{product_id}", response_model=ProductDetailOut)
 async def get_product_detail(product_id: int, db: AsyncSession = Depends(get_db)):
+    now_ts = time.time()
+    if product_id in _PRODUCT_DETAIL_CACHE:
+        cached_ts, cached_detail = _PRODUCT_DETAIL_CACHE[product_id]
+        if now_ts - cached_ts < CACHE_TTL:
+            return cached_detail
+
     query = (
         select(Product)
         .options(selectinload(Product.listings).selectinload(PriceListing.store))
@@ -212,7 +239,7 @@ async def get_product_detail(product_id: int, db: AsyncSession = Depends(get_db)
             )
         )
 
-    return ProductDetailOut(
+    detail = ProductDetailOut(
         id=prod.id,
         name=prod.name,
         slug=prod.slug,
@@ -232,6 +259,8 @@ async def get_product_detail(product_id: int, db: AsyncSession = Depends(get_db)
         best_store=sorted_listings[0].store.name if sorted_listings[0].store else None,
         platforms=platform_items
     )
+    _PRODUCT_DETAIL_CACHE[product_id] = (now_ts, detail)
+    return detail
 
 @router.get("/categories")
 async def get_categories(db: AsyncSession = Depends(get_db)):
