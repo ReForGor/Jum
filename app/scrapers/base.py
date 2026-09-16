@@ -29,8 +29,6 @@ class BasePlatformScraper(ABC):
         self.headers = {
             "User-Agent": random.choice(USER_AGENTS),
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-            "Accept-Language": "en-US,en;q=0.9",
-            "Accept-Encoding": "gzip, deflate, br",
             "Accept-Language": "th-TH,th;q=0.9,en-US;q=0.8,en;q=0.7",
             "DNT": "1",
             "Connection": "keep-alive",

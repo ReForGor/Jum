@@ -113,11 +113,11 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://ihavecpu.com/product/42261/cpu-(%E0%B8%8B%E0%B8%B5%E0%B8%9E%E0%B8%B5%E0%B8%A2%E0%B8%B9)-intel-lga-1700-core-i5-12400f-2.5-ghz-6c-12t-(tray-plus-fan)-(3y)"
             },
             "banana": {
-                "price": 4990.0,
+                "price": 4941.0,
                 "url": "https://www.bnn.in.th/th/p/intel-cpu-core-i5-12400f-25-ghz-6c12t-lga1700-bx8071512400f_dnl796"
             },
             "advice": {
-                "price": 4650.0,
+                "price": 4750.0,
                 "url": "https://www.advice.co.th/product/A0140933"
             }
         }
@@ -212,7 +212,7 @@ VERIFIED_PRODUCTS_DATA = [
         },
         "prices": {
             "jib": {
-                "price": 7090.0,
+                "price": 7490.0,
                 "url": "https://www.jib.co.th/web/product/readProduct/73713"
             },
             "ihavecpu": {
@@ -220,11 +220,11 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://ihavecpu.com/product/27778/vga(%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B8%94%E0%B8%88%E0%B8%AD)-gigabyte-geforce-rtx-3050-windforce-oc-v2-6g-6gb-gddr6-(gv-n3050wf2ocv2-6gd)-(3y)"
             },
             "banana": {
-                "price": 5790.0,
+                "price": 5641.0,
                 "url": "https://www.bnn.in.th/th/p/gigabyte-vga-rtx3050-windforce-oc-v2-6gb-gddr6-96-bit-4719331355081_z77e8y"
             },
             "advice": {
-                "price": 6990.0,
+                "price": 7090.0,
                 "url": "https://www.advice.co.th/product/A0165454"
             }
         }
@@ -255,7 +255,7 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://ihavecpu.com/product/14142/mainboard-(%E0%B9%80%E0%B8%A1%E0%B8%99%E0%B8%9A%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%94)(am5)-gigabyte-b650m-d3hp-(rev.1.0)-(3y)"
             },
             "banana": {
-                "price": 3550.0,
+                "price": 3501.0,
                 "url": "https://www.bnn.in.th/th/p/gigabyte-mainboard-b650m-d3hp-rev-10-ddr5-am5-4719331857851_zpqx5o"
             },
             "advice": {
@@ -290,7 +290,7 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://ihavecpu.com/product/8630/mainboard-(%E0%B9%80%E0%B8%A1%E0%B8%99%E0%B8%9A%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%94)-(1700)-asus-prime-b760m-a"
             },
             "banana": {
-                "price": 4660.0,
+                "price": 4611.0,
                 "url": "https://www.bnn.in.th/th/p/asus-mainboard-prime-b760m-a-wifi-csm-ddr5-lga-1700-4711387131466_zom54y"
             },
             "advice": {
@@ -325,7 +325,7 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://ihavecpu.com/product/19084/mainboard-(%E0%B9%80%E0%B8%A1%E0%B8%99%E0%B8%9A%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%94)(am5)-asrock-b650m-pg-lightning-(3y)"
             },
             "banana": {
-                "price": 3290.0,
+                "price": 3241.0,
                 "url": "https://www.bnn.in.th/th/p/asrock-mainboard-b650m-pg-lightning-am5-4710483943829_zo77yk"
             },
             "advice": {
@@ -360,7 +360,7 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://ihavecpu.com/product/39092/ram-(%E0%B9%81%E0%B8%A3%E0%B8%A1)-kingston-fury-beast-16gb-(8x2)-ddr4-3200mhz-black-(kf432c16bbk2-16wp)-(lt)"
             },
             "banana": {
-                "price": 7690.0,
+                "price": 7541.0,
                 "url": "https://www.bnn.in.th/th/p/kingston-ram-pc-ddr4-16gb3200mhz-cl16-8gbx2-fury-beast-black-kf432c16bbk216wp-740617351897_zew6o3"
             },
             "advice": {
@@ -399,7 +399,7 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://www.bnn.in.th/th/p/kingston-ram-pc-ddr5-16gb5600mhzcl16-8gb-x-2-fury-beast-kf556c40bbk2-16-740617325935_r67m3g"
             },
             "advice": {
-                "price": 16330.0,
+                "price": 17720.0,
                 "url": "https://www.advice.co.th/product/A0141518"
             }
         }
@@ -430,7 +430,7 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://ihavecpu.com/product/23464/m.2-(%E0%B9%80%E0%B8%AD%E0%B8%AA%E0%B9%80%E0%B8%AD%E0%B8%AA%E0%B8%94%E0%B8%B5)-kingston-nv3-1tb-pcie-4-nvme-m.2-2280-(snv3s-1000g)-(5y)"
             },
             "banana": {
-                "price": 6790.0,
+                "price": 6641.0,
                 "url": "https://www.bnn.in.th/th/p/kingston-ssd-nv3-1tb-m2-2280-40-pcienvme-r6000mbs-w4000mbs-3-year-snv3s1000g-740617344790_zgk6w5"
             },
             "advice": {
@@ -465,7 +465,7 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://ihavecpu.com/product/22285/m.2-(%E0%B9%80%E0%B8%AD%E0%B8%AA%E0%B9%80%E0%B8%AD%E0%B8%AA%E0%B8%94%E0%B8%B5)-kingston-nv3-500gb-pcie-4-nvme-m.2-2280-(snv3s-500g)-(5y)-%E0%B8%AB%E0%B8%A1%E0%B8%94%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%84%E0%B8%A5%E0%B8%B1%E0%B8%87"
             },
             "banana": {
-                "price": 4790.0,
+                "price": 4741.0,
                 "url": "https://www.bnn.in.th/th/p/kingston-ssd-nv3-500gb-m2-2280-40-pcienvme-r5000mbs-w3000mbs-3-year-snv3s500g-740617344806_z96g89"
             },
             "advice": {
@@ -500,7 +500,7 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://ihavecpu.com/product/25233/m.2-(%E0%B9%80%E0%B8%AD%E0%B8%AA%E0%B9%80%E0%B8%AD%E0%B8%AA%E0%B8%94%E0%B8%B5)-kingston-nv3-2tb-pcie-4-nvme-m.2-2280-(snv3s-2000g)-(5y)"
             },
             "banana": {
-                "price": 10490.0,
+                "price": 10231.0,
                 "url": "https://www.bnn.in.th/th/p/kingston-ssd-nv3-2tb-m2-2280-40-pcienvme-r6000mbs-w5000mbs-3-year-snv3s2000g-740617344783_d40jk5"
             },
             "advice": {
@@ -535,11 +535,11 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://ihavecpu.com/product/36738/m.2-(%E0%B9%80%E0%B8%AD%E0%B8%AA%E0%B9%80%E0%B8%AD%E0%B8%AA%E0%B8%94%E0%B8%B5)-wd-black-sn850x-1tb-pcie-4-nvme-m.2-2280-(wds100t2x0e)-(5y)"
             },
             "banana": {
-                "price": 6590.0,
+                "price": 6441.0,
                 "url": "https://www.bnn.in.th/th/p/wd-ssd-1tb-m2-pcienvme-r7300mbs-w6300mbs-black-5-year-sn850x-718037891392_d8qvl3"
             },
             "advice": {
-                "price": 6100.0,
+                "price": 6190.0,
                 "url": "https://www.advice.co.th/product/A0146642"
             }
         }
@@ -570,7 +570,7 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://ihavecpu.com/product/28441/psu-(%E0%B8%AD%E0%B8%B8%E0%B8%9B%E0%B8%81%E0%B8%A3%E0%B8%93%E0%B9%8C%E0%B8%88%E0%B9%88%E0%B8%B2%E0%B8%A2%E0%B9%84%E0%B8%9F)-corsair-rm850e-850w-(80gold)(cp-9020296-na)-(7y)"
             },
             "banana": {
-                "price": 4290.0,
+                "price": 4241.0,
                 "url": "https://www.bnn.in.th/th/p/corsair-power-supply-rme850e-850watt-80-plus-gold-black-cp-9020296-na-840006691242_z77n68"
             },
             "advice": {
@@ -709,11 +709,11 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://ihavecpu.com/product/48506/monitor-(%E0%B8%88%E0%B8%AD%E0%B8%A1%E0%B8%AD%E0%B8%99%E0%B8%B4%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C)-lg-24u411b-b---23.8-ips-fhd-144hz-(3y)"
             },
             "banana": {
-                "price": 2650.0,
+                "price": 2601.0,
                 "url": "https://www.bnn.in.th/th/p/lg-monitor-24u411b-b-ips-120hz-8806096835319_r01pm6"
             },
             "advice": {
-                "price": 2550.0,
+                "price": 2530.0,
                 "url": "https://www.advice.co.th/product/A0183471"
             }
         }
@@ -778,7 +778,7 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://ihavecpu.com/product/11719/mouse-(%E0%B9%80%E0%B8%A1%E0%B8%B2%E0%B8%AA%E0%B9%8C)-logitech-g-pro-x-superlight-2-(black)-(2y)"
             },
             "banana": {
-                "price": 3990.0,
+                "price": 3941.0,
                 "url": "https://www.bnn.in.th/th/p/logitech-gaming-mouse-g-pro-x-superlight-2-black-097855177810_d4xew5"
             },
             "advice": {
@@ -812,7 +812,7 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://ihavecpu.com/product/11721/mouse-(%E0%B9%80%E0%B8%A1%E0%B8%B2%E0%B8%AA%E0%B9%8C)-logitech-g-pro-x-superlight-2-(white)-(2y)"
             },
             "banana": {
-                "price": 4090.0,
+                "price": 4041.0,
                 "url": "https://www.bnn.in.th/th/p/logitech-gaming-mouse-gproxsuperlight2com-w-white-097855203687_r647wv"
             },
             "advice": {
@@ -884,7 +884,7 @@ VERIFIED_PRODUCTS_DATA = [
                 "url": "https://www.bnn.in.th/th/p/logitech-gaming-mouse-g102-gen-lightsync-black-097855156006_d222xd"
             },
             "advice": {
-                "price": 500.0,
+                "price": 495.0,
                 "url": "https://www.advice.co.th/product/A0131353"
             }
         }
